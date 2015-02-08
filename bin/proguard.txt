@@ -1,0 +1,49 @@
+# view res/layout/activity_bottom_tab.xml #generated:1
+-keep class android.support.v4.app.FragmentTabHost { <init>(...); }
+
+# view AndroidManifest.xml #generated:84
+-keep class com.apps.willgiveAndroid.CaptureActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:191
+-keep class com.apps.willgiveAndroid.HelpActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:125
+-keep class com.apps.willgiveAndroid.PreferencesActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:69
+-keep class com.apps.willgiveAndroid.WillGiveMainPageActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:148
+-keep class com.apps.willgiveAndroid.book.SearchBookContentsActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:129
+-keep class com.apps.willgiveAndroid.encode.EncodeActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:166
+-keep class com.apps.willgiveAndroid.history.HistoryActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:59
+-keep class com.apps.willgiveAndroid.login.WillGiveLoginActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:182
+-keep class com.apps.willgiveAndroid.share.AppPickerActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:174
+-keep class com.apps.willgiveAndroid.share.BookmarkPickerActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:158
+-keep class com.apps.willgiveAndroid.share.ShareActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:78
+-keep class com.facebook.LoginActivity { <init>(...); }
+
+# view res/layout/com_facebook_usersettingsfragment.xml #generated:48
+-keep class com.facebook.widget.LoginButton { <init>(...); }
+
+# view ldpi/res/layout-ldpi/capture.xml #generated:23
+# view res/layout/capture.xml #generated:23
+-keep class com.google.zxing.client.android.ViewfinderView { <init>(...); }
+
+# view res/layout/search_book_contents_list_item.xml #generated:17
+-keep class com.google.zxing.client.android.book.SearchBookContentsListItem { <init>(...); }
+
