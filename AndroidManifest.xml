@@ -22,6 +22,7 @@
 
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.FLASHLIGHT"/>
   <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -51,14 +52,14 @@
                     android:smallScreens="true"
                     android:anyDensity="true"/>
 
-  <application android:icon="@drawable/launcher_icon"
-               android:logo="@drawable/launcher_icon"
+  <application android:icon="@drawable/app_icon"
+               android:logo="@drawable/app_icon"
                android:theme="@android:style/Theme.Holo.Light"
-               android:label="WillGive"
+               android:label="@string/app_name"
                android:allowBackup="true">
     <activity
             android:name="com.apps.willgiveAndroid.login.WillGiveLoginActivity"
-            android:label="WillGive" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,21 +69,37 @@
     
     <activity
             android:name="com.apps.willgiveAndroid.WillGiveMainPageActivity"
-            android:label="WillGive" >
+            android:label="@string/app_name" >
         <intent-filter>
         	<action android:name="android.intent.action.VIEW"/>
         	<category android:name="android.intent.category.DEFAULT"/>
       	</intent-filter>
     </activity>
+    
+    <activity
+            android:name="com.apps.willgiveAndroid.charity.CharityDetailPageActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.apps.willgiveAndroid.WillGiveMainPageActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.apps.willgiveAndroid.WillGiveMainPageActivity" />
+    </activity>
         
     <activity android:name="com.facebook.LoginActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" >
+    </activity>
+        
+    <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
     
+    <activity android:name="com.dm.zbar.android.scanner.ZBarScannerActivity"
+        android:screenOrientation="landscape"
+        android:label="@string/app_name" />
+    
     <!-- Below are activities for QR Code Scanner -->
-    <activity android:name=".CaptureActivity"
-              android:screenOrientation="portrait"
+    <activity android:name="com.google.zxing.client.android.CaptureActivity"
+              android:screenOrientation="landscape"
               android:clearTaskOnLaunch="true"
               android:stateNotNeeded="true"
               android:configChanges="orientation|keyboardHidden"
@@ -122,11 +139,11 @@
         <data android:scheme="zxing" android:host="scan" android:path="/"/>
       </intent-filter>
     </activity>
-    <activity android:name=".PreferencesActivity"
+    <activity android:name="com.google.zxing.client.android.PreferencesActivity"
               android:label="@string/preferences_name"
               android:stateNotNeeded="true">
     </activity>
-    <activity android:name=".encode.EncodeActivity"
+    <activity android:name="com.google.zxing.client.android.encode.EncodeActivity"
               android:stateNotNeeded="true">
       <intent-filter>
         <action android:name="com.google.zxing.client.android.ENCODE"/>
@@ -145,7 +162,7 @@
         <data android:mimeType="text/plain"/>
       </intent-filter>
     </activity>
-    <activity android:name=".book.SearchBookContentsActivity"
+    <activity android:name="com.google.zxing.client.android.book.SearchBookContentsActivity"
               android:label="@string/sbc_name"
               android:stateNotNeeded="true"
               android:screenOrientation="landscape"
@@ -155,7 +172,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
-    <activity android:name=".share.ShareActivity"
+    <activity android:name="com.google.zxing.client.android.share.ShareActivity"
               android:stateNotNeeded="true"
               android:screenOrientation="user">
       <intent-filter>
@@ -163,7 +180,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
-    <activity android:name=".history.HistoryActivity"
+    <activity android:name="com.google.zxing.client.android.history.HistoryActivity"
               android:label="@string/history_title"
               android:stateNotNeeded="true">
       <intent-filter>
@@ -171,7 +188,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
-    <activity android:name=".share.BookmarkPickerActivity"
+    <activity android:name="com.google.zxing.client.android.share.BookmarkPickerActivity"
               android:label="@string/bookmark_picker_name"
               android:stateNotNeeded="true">
       <intent-filter>
@@ -179,7 +196,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
-    <activity android:name=".share.AppPickerActivity"
+    <activity android:name="com.google.zxing.client.android.share.AppPickerActivity"
               android:label="@string/app_picker_name"
               android:stateNotNeeded="true"
               android:configChanges="orientation">
@@ -188,7 +205,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
-    <activity android:name=".HelpActivity"
+    <activity android:name="com.google.zxing.client.android.HelpActivity"
               android:screenOrientation="user">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>

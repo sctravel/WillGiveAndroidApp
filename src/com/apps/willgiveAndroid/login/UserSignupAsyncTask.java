@@ -11,21 +11,25 @@ import com.apps.willgiveAndroid.WillGiveMainPageActivity;
 import com.apps.willgiveAndroid.common.Constants;
 import com.apps.willgiveAndroid.user.User;
 import com.apps.willgiveAndroid.user.UserSettings;
-import com.apps.willgiveAndroid.user.WillGiveUserUtils;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
 
-public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
+public class UserSignupAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	
 	private User user;
-	private String username;
+	private String email;
 	private String password;
-	private UserLoginFragment fragment;
+	private String firstName;
+	private String lastName;
+
+	private UserSignupFragment fragment;
 	
-	public UserLoginAsyncTask(UserLoginFragment fragment, String username, String password){		
+	public UserSignupAsyncTask(UserSignupFragment fragment, String email, String password, String firstName, String lastName){		
 		this.fragment = fragment;
-		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
 		this.password = password;
 	}
 	
@@ -40,7 +44,7 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		    fragment.getActivity().startActivity(intent);
 		    fragment.getActivity().finish();
 		} else {
-			fragment.getMessageView().setText("Email or password is incorrect.");
+			fragment.getMessageView().setText("Sign up failed. Please try it again.");
 			fragment.getMessageView().setTextColor(Color.RED);
 		}
 		
@@ -51,12 +55,9 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
 		//TODO:  use correct username password
-		user = WillGiveLoginUtils.postToLogin(username, password);
-		if(user != null)  {
-			//Syncing the settings once user logged in 
-			UserSettings settings = WillGiveUserUtils.getUserSettings(user.getId());
+		user = WillGiveLoginUtils.postToSignup(email, password, firstName, lastName);
+		if(user != null)     
 			return true;
-		}
 		
 		return false;
 	}

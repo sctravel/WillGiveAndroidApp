@@ -13,12 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-public class RetrieveAllCharityAsyncTask extends AsyncTask<Context, Integer, Boolean>{
+public class SearchCharityAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	
 	private WillGiveMainPageActivity activity;
 	private FragmentCallback fragmentCallback;
 	
-	public RetrieveAllCharityAsyncTask(FragmentCallback fragmentCallback, WillGiveMainPageActivity activity){		
+	public SearchCharityAsyncTask(FragmentCallback fragmentCallback, WillGiveMainPageActivity activity){		
 		this.activity =activity; 
 		this.fragmentCallback = fragmentCallback;
 	}

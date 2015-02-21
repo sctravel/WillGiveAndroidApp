@@ -3,20 +3,19 @@
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:background="@drawable/text_view_box"
-    android:padding="3dip" >
+    android:padding="1dip" >
 
     <ImageView
         android:id="@+id/charityListItemIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="3dip"
-        android:contentDescription="TODO"
-        android:src="@drawable/icon_flash_card" />
+         />
 
     <TextView
-        android:id="@+id/chairtyListItemName"
+        android:id="@+id/charityListItemName"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_toRightOf="@id/charityListItemIcon"

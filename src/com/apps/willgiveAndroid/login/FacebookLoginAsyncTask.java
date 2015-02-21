@@ -1,32 +1,24 @@
 package com.apps.willgiveAndroid.login;
 
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.apps.willgiveAndroid.WillGiveMainPageActivity;
-import com.apps.willgiveAndroid.common.Constants;
 import com.apps.willgiveAndroid.user.User;
-import com.apps.willgiveAndroid.user.UserSettings;
-import com.apps.willgiveAndroid.user.WillGiveUserUtils;
 
-import android.content.SharedPreferences;
-import android.graphics.Color;
-
-public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
+public class FacebookLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	
 	private User user;
-	private String username;
-	private String password;
 	private UserLoginFragment fragment;
+	private String accessToken;
+	private String refreshToken;
 	
-	public UserLoginAsyncTask(UserLoginFragment fragment, String username, String password){		
+	public FacebookLoginAsyncTask(UserLoginFragment fragment, String accessToken, String refreshToken){		
 		this.fragment = fragment;
-		this.username = username;
-		this.password = password;
+		this.accessToken = accessToken;
+		this.refreshToken = refreshToken;
 	}
 	
 	@Override
@@ -51,12 +43,9 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
 		//TODO:  use correct username password
-		user = WillGiveLoginUtils.postToLogin(username, password);
-		if(user != null)  {
-			//Syncing the settings once user logged in 
-			UserSettings settings = WillGiveUserUtils.getUserSettings(user.getId());
+		user = WillGiveLoginUtils.FacebookLogin(accessToken, refreshToken);
+		if(user != null)     
 			return true;
-		}
 		
 		return false;
 	}

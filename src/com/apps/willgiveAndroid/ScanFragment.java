@@ -1,7 +1,23 @@
 package com.apps.willgiveAndroid;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import net.sourceforge.zbar.Symbol;
+
+import com.apps.willgiveAndroid.charity.CharityQRCode;
+import com.apps.willgiveAndroid.charity.RetrieveCharityByEINAsyncTask;
+import com.apps.willgiveAndroid.charity.RetrieveCharityByIdAsyncTask;
+import com.apps.willgiveAndroid.charity.WillGiveCharityUtils;
+import com.apps.willgiveAndroid.common.Constants;
+import com.dm.zbar.android.scanner.ZBarConstants;
+import com.dm.zbar.android.scanner.ZBarScannerActivity;
+
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ScanFragment extends Fragment {
+
+    private static final int ZBAR_SCANNER_REQUEST = 0;
 
     private Button scanBtn;
     private TextView formatTxt;
@@ -30,6 +48,8 @@ public class ScanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.scan_fragment, container,false);
+        
+        
         scanBtn = (Button) view.findViewById(R.id.scan_button);
 		formatTxt = (TextView) view.findViewById(R.id.scan_format);
 		contentTxt = (TextView) view.findViewById(R.id.scan_content);
@@ -38,51 +58,51 @@ public class ScanFragment extends Fragment {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if(v.getId()==R.id.scan_button){
-					Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-				    intent.putExtra("SCAN_MODE", "QR_CODE_MODE");//for Qr code, its "QR_CODE_MODE" instead of "PRODUCT_MODE"
-				    intent.putExtra("SAVE_HISTORY", true);//this stops saving ur barcode in barcode scanner app's history
-				    startActivityForResult(intent, 0);
-					//IntentIntegrator scanIntegrator = new IntentIntegrator(WillGiveMainPageActivity.this);
-					//scanIntegrator.initiateScan();
-				}
-				
+					Intent intent = new Intent(getActivity(), ZBarScannerActivity.class);
+					intent.putExtra(ZBarConstants.SCAN_MODES, new int[]{Symbol.QRCODE});
+
+			        startActivityForResult(intent, ZBAR_SCANNER_REQUEST);
+			        
+				}			
 			}
 		});
+		
+		
         return view;
     }
     
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		//IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		Log.d("onResult", "got result");
-		//String contents = null;
-	   // super.onActivityResult(requestCode, resultCode, intent);
-	    if (requestCode == 0) {
-	          //if (resultCode == RESULT_OK) {
-	        	 String scanContent = intent.getStringExtra("SCAN_RESULT");
-	             String scanFormat = intent.getStringExtra("SCAN_RESULT_FORMAT");
-	             formatTxt.setText("FORMAT: " + scanFormat);
-	 			 contentTxt.setText("CONTENT: " + scanContent);
+		
+		if(requestCode == ZBAR_SCANNER_REQUEST) {
+			if (resultCode == Activity.RESULT_OK) {
+				String scanContent = intent.getStringExtra(ZBarConstants.SCAN_RESULT);
+				Log.d("scanContent", scanContent);
+
+				CharityQRCode qrcode = WillGiveCharityUtils.parseCharityQRCode(scanContent);
+				if( qrcode == null ) {
+					Toast toast = Toast.makeText( getActivity().getApplicationContext(), 
+					        "This is not a valid WillGive QR code!", Toast.LENGTH_LONG);
+					        toast.show();
+				} else {
+					
+					AsyncTask<Context, Integer, Boolean> task = new RetrieveCharityByEINAsyncTask( (WillGiveMainPageActivity) getActivity(), qrcode.getEIN());
+		 		    task.execute(getActivity().getApplicationContext());
+				}
+	             //Currently content is charityId
+	             //formatTxt.setText("FORMAT: " + scanFormat);
+	 			 contentTxt.setText("CONTENT: " + scanContent);			
+	 			 //scanContent = "900000005";
+	 			 //
 	             // Handle successful scan
-	          //} else if (resultCode == RESULT_CANCELED) {
-	             // Handle cancel
-	        	//  Toast toast = Toast.makeText( getApplicationContext(), 
-				  //          "No scan data received!", Toast.LENGTH_SHORT);
-				    //    toast.show();
-	         // }
-	    }
-		/*if (scanningResult != null) {
-			//we have a result
-			String scanContent = scanningResult.getContents();
-			String scanFormat = scanningResult.getFormatName();
-			formatTxt.setText("FORMAT: " + scanFormat);
-			contentTxt.setText("CONTENT: " + scanContent);
+	         } else  {
+	             // Handle cancel or failure
+	        	  Toast toast = Toast.makeText( getActivity().getApplicationContext(), 
+				        "No scan data received!", Toast.LENGTH_LONG);
+				        toast.show();
+	          }
 		}
-		else{    
-			Toast toast = Toast.makeText(getApplicationContext(), 
-			            "No scan data received!", Toast.LENGTH_SHORT);
-			        toast.show();
-	    }
-		//retrieve scan result
-		finishActivity(requestCode);*/
+		
+		//finishActivity(requestCode);
 	}
 }

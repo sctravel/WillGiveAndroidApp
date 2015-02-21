@@ -9,6 +9,8 @@ public class ServerUrls {
 
 	public static String ALL_CHARITIES_PATH = "/services/charities/listAllCharity";
 	public static String GET_CHARITY_BY_ID_PATH = "/services/charityById/";
+	public static String GET_CHARITY_BY_EIN_PATH = "/services/charityByEIN/";
+	public static String SEARCH_CHARITY_PATH = "/services/charities/searchCharity";
 	
 	public static String GET_USER_TRANSACTIONS_PATH= "/services/user/getTransactionHistory";
 	public static String GET_USER_SETTINGS_PATH = "/services/user/settings";
@@ -19,5 +21,10 @@ public class ServerUrls {
 	//Login and Logout Services
 	public static String LOG_OUT_PATH = "/login/logout";
 	public static String MOBILE_LOGIN_PATH = "/services/login/mobileSignin";
+	public static String MOBILE_SIGNUP_PATH = "/services/login/mobileSignup";
+
+	public static String MOBILE_FACEBOOK_LOGIN_PATH = "/auth/facebook/token";
+	public static String QR_SCAN_PATH = "/c/"; //need to append id
 	
+	//#120220150  #
 }

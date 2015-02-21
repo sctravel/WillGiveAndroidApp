@@ -2,32 +2,98 @@ package com.apps.willgiveAndroid;
 
 
 
+import java.util.List;
+
 import com.apps.willgiveAndroid.charity.RetrieveAllCharityAsyncTask;
 import com.apps.willgiveAndroid.charity.WillGiveCharityUtils;
+import com.apps.willgiveAndroid.charity.Charity;
 import com.apps.willgiveAndroid.login.UserLoginAsyncTask;
 import com.apps.willgiveAndroid.login.WillGiveLoginActivity;
+import com.apps.willgiveAndroid.user.User;
+import com.apps.willgiveAndroid.utils.ImageLoaderHelper;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class WillGiveMainPageActivity  extends FragmentActivity {
 
 	//private ActionBar actionBar;
     private FragmentTabHost mTabHost;
+    private List<Charity> charityList;
+    private User user; 
+    
+    public void setCharityList( List<Charity> list) {
+    	this.charityList = list;
+    }
+    public List<Charity> getCharityList() {
+    	return this.charityList;
+    }
+    public User getUser() {
+    	return user;
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        //SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        // Configure the search info and add any event listeners
+        
+       // MenuItem shareItem = menu.findItem(R.id.action_share);
+       // mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+       // mShareActionProvider.setShareIntent(getDefaultIntent());
+        
+       // When using the support library, the setOnActionExpandListener() method is
+        // static and accepts the MenuItem object as an argument
+        MenuItemCompat.setOnActionExpandListener(searchItem, new OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Do something when collapsed
+                return true;  // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do something when expanded
+                return true;  // Return true to expand action view
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
         setContentView(R.layout.activity_bottom_tab);
+        Bundle extras = getIntent().getExtras();
+        //TODO: we also need to get marked questions' information
+        if (extras != null) {
+	        //exam = (Exam) extras.getSerializable("exam");
+	        user =  (User) extras.get("user");  
+	        Log.d("UserEmail", user.getEmail());
+	        Log.d("UserId", user.getId()+"");
+
+        }  
+        setTitle("Hi, "+user.getFirstName());
+        
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderHelper.initImageLoader(getApplicationContext());
+        
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
        
@@ -36,72 +102,16 @@ public class WillGiveMainPageActivity  extends FragmentActivity {
                 ScanFragment.class, null);
         mTabHost.addTab(
                 mTabHost.newTabSpec("tab2").setIndicator("Charity", getResources().getDrawable(R.drawable.ic_action_cut)),
-                ScanFragment.class, null);
+                HotCharityFragment.class, null);
         mTabHost.addTab(
                 mTabHost.newTabSpec("tab3").setIndicator("My Fav", getResources().getDrawable(R.drawable.ic_action_mail)),
-                HotCharityFragment.class, null);
+                FavCharityFragment.class, null);
         mTabHost.addTab(
                 mTabHost.newTabSpec("tab4").setIndicator("Settings", getResources().getDrawable(R.drawable.ic_action_refresh)),
                 HotCharityFragment.class, null);
         
-        (new RetrieveAllCharityAsyncTask(WillGiveMainPageActivity.this)).execute(getApplicationContext());
-        //(new UserLoginAsyncTask( new WillGiveLoginActivity() )).execute(getApplicationContext());
 
 	}
-
-	
-	/*
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.activity_main);
-	    // ALT+ENTER
-	    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-	    intent.putExtra("SCAN_MODE", "PRODUCT_MODE");//for Qr code, its "QR_CODE_MODE" instead of "PRODUCT_MODE"
-	    intent.putExtra("SAVE_HISTORY", true);//this stops saving ur barcode in barcode scanner app's history
-	    startActivityForResult(intent, 0);
-	}*/
-
-	/*
-	 * 
-		(non-Javadoc)
-	 * @see android.support.v4.app.FragmentActivity#onActivityResult(int, int, android.content.Intent)
-	 */
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		//IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-		Log.d("onResult", "got result");
-		//String contents = null;
-	   // super.onActivityResult(requestCode, resultCode, intent);
-	  /*  if (requestCode == 0) {
-	          if (resultCode == RESULT_OK) {
-	        	  String scanContent = intent.getStringExtra("SCAN_RESULT");
-	             String scanFormat = intent.getStringExtra("SCAN_RESULT_FORMAT");
-	             formatTxt.setText("FORMAT: " + scanFormat);
-	 			contentTxt.setText("CONTENT: " + scanContent);
-	             // Handle successful scan
-	          } else if (resultCode == RESULT_CANCELED) {
-	             // Handle cancel
-	        	  Toast toast = Toast.makeText(getApplicationContext(), 
-				            "No scan data received!", Toast.LENGTH_SHORT);
-				        toast.show();
-	          }
-	    }*/
-		/*if (scanningResult != null) {
-			//we have a result
-			String scanContent = scanningResult.getContents();
-			String scanFormat = scanningResult.getFormatName();
-			formatTxt.setText("FORMAT: " + scanFormat);
-			contentTxt.setText("CONTENT: " + scanContent);
-		}
-		else{    
-			Toast toast = Toast.makeText(getApplicationContext(), 
-			            "No scan data received!", Toast.LENGTH_SHORT);
-			        toast.show();
-	    }
-		//retrieve scan result
-		finishActivity(requestCode);*/
-	}
-
 
 	
 }

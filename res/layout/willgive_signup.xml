@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:facebook="http://schemas.android.com/apk/res-auto"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  xmlns:facebook="http://schemas.android.com/apk/res-auto"
   android:fillViewport="true">
   <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:background="#ffffff">
+        android:layout_height="wrap_content" android:background="#fff">
  
         <!--  Header  Starts-->
         <LinearLayout android:id="@+id/header"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/green_button"
                 android:paddingTop="5dip"
+                android:background="@color/green_button"
                 android:paddingBottom="5dip">
                 <!-- Logo Start-->
                 <ImageView android:src="@drawable/header_icon"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="center_vertical|center_horizontal"
-                            android:gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_marginLeft="10dip"/>
                 <!-- Logo Ends -->
         </LinearLayout>
@@ -35,7 +33,7 @@
         </LinearLayout>
         <!-- Footer Ends -->
  
-        <!-- Login Form -->
+        <!-- Registration Form -->
         <LinearLayout
           android:orientation="vertical"
           android:layout_width="match_parent"
@@ -43,46 +41,50 @@
           android:padding="10dip"
           android:layout_below="@id/header">
           <TextView 
-		        android:id="@+id/messageView"
+		        android:id="@+id/reg_message"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_marginTop="20dp"   
-		        android:layout_gravity="center_vertical|center_horizontal"
-		     />
-          <!--  Email Label -->
-          <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="Email"/>
-          <EditText
-		        android:id="@+id/loginUserNameInput"
-		        android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"
-                android:singleLine="true"
-		        />
-          <!--  Password Label -->
-          <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="Password"/>
-           <EditText
-		        android:id="@+id/loginPasswordInput"
-		        android:layout_width="fill_parent"
+		        android:layout_marginTop="10dp"   
+		        android:layout_marginBottom="10dp"
+		        android:layout_gravity="center_vertical|center_horizontal"/>
+		        
+          <EditText android:id="@+id/reg_firstname"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
                 android:singleLine="true"
+                android:hint="First Name"
+                android:layout_marginBottom="10dip"/>
+          <EditText android:id="@+id/reg_lastname"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:singleLine="true"
+                android:hint="Last Name"
+                android:layout_marginBottom="10dip"/>
+          
+          <EditText android:id="@+id/reg_email"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:singleLine="true"
+                android:hint="Email"
+                android:layout_marginBottom="10dip"/>
+          
+          <EditText android:id="@+id/reg_password"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:password="true"
-		        android:inputType="textPassword"
-		        />
-          <!-- Login button -->
-          <Button android:id="@+id/loginButton"
+                android:singleLine="true"
+                android:hint="Password"
+                android:layout_marginTop="5dip"/>
+          <!-- Register Button -->
+          <Button android:id="@+id/btnRegister"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:background="@color/green_button"
-                android:text="Login"/>
+                android:text="Register New Account"/>
           <TextView 
 		        android:id="@+id/orView"
 		        android:layout_width="wrap_content"
@@ -90,28 +92,27 @@
 		        android:layout_gravity="center_vertical|center_horizontal"
 		        android:layout_marginTop="10dip"
 		        android:layout_marginBottom="10dip"
-		        android:text = "Or Login with Facebook"
+		        android:text = "Or Sign up with Facebook"
 		     />
 	      <com.facebook.widget.LoginButton
 		        android:id="@+id/fb_login_button"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
-		        android:layout_marginTop="5dp"
+		        android:text="Sign up with Facebook"
 		        facebook:confirm_logout="false"
 		        facebook:fetch_user_info="true" /> 
-          <!-- Link to Registration Screen -->
-          <TextView android:id="@+id/link_to_register"
+           <!-- Link to Login Screen -->
+          <TextView android:id="@+id/link_to_login"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dip"
-                android:layout_marginBottom="40dip"
-                android:text="Register here"
+                android:layout_marginTop="20dip"
+                android:layout_marginBottom="20dip"
+                android:text="Already has account! Login here"
                 android:gravity="center"
                 android:textSize="20dip"
-                android:textColor="#0b84aa"/>
+                android:textColor="#025f7c"/>
  
         </LinearLayout>
-        <!-- Login Form Ends -->
+        <!-- Registration Form Ends -->
   </RelativeLayout>
 </ScrollView>
-

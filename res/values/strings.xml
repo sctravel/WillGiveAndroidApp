@@ -4,7 +4,6 @@
 <resources>
   <string name="app_name">WillGive</string>
   <string name="app_id">420297851460293</string>
-  
   <string name="app_picker_name">Applications</string>
   <string name="bookmark_picker_name">Bookmarks</string>
   <string name="button_add_calendar">Add to calendar</string>
@@ -95,7 +94,7 @@
   <string name="preferences_general_title">General settings</string>
   <string name="preferences_invert_scan_title">Invert scan</string>
   <string name="preferences_invert_scan_summary">Scan for white barcodes on black background. Not available on some devices.</string>  
-  <string name="preferences_name">Settings</string>
+  <string name="preferences_name">Settings</string> 
   <string name="preferences_play_beep_title">Beep</string>
   <string name="preferences_remember_duplicates_summary">Store multiple scans of the same barcode in History</string>
   <string name="preferences_remember_duplicates_title">Remember duplicates</string>

@@ -1,6 +1,10 @@
 package com.apps.willgiveAndroid.charity;
 
-public class Charity {
+import java.io.Serializable;
+
+public class Charity implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private Long id;
 	private String email;
@@ -20,6 +24,7 @@ public class Charity {
 	private String website;
 	private String facebookUrl;
 	private Double rating;
+	private String imagePath;
 	
 	//not used for now
 	private String status;
@@ -30,7 +35,7 @@ public class Charity {
 			String category, String address, String city, String state,
 			String country, String zipcode, String phone, String fax,
 			String mission, String imageUrl, String videoUrl, String website,
-			String facebookUrl, Double rating, String status,
+			String facebookUrl, String imagePath, Double rating, String status,
 			String contactPersonName, String contactPersonTitle) {
 		super();
 		this.id = id;
@@ -50,6 +55,7 @@ public class Charity {
 		this.videoUrl = videoUrl;
 		this.website = website;
 		this.facebookUrl = facebookUrl;
+		this.imagePath = imagePath;
 		this.rating = rating;
 		this.status = status;
 		this.contactPersonName = contactPersonName;
@@ -181,6 +187,12 @@ public class Charity {
 	}
 	public void setFacebookUrl(String facebookUrl) {
 		this.facebookUrl = facebookUrl;
+	}
+	public String getImagePath() {
+		return imagePath;
+	}
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 	public Double getRating() {
 		return rating;
