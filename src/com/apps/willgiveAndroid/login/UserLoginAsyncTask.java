@@ -41,8 +41,7 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		    fragment.getActivity().startActivity(intent);
 		    fragment.getActivity().finish();
 		} else {
-			fragment.getMessageView().setText("Email or password is incorrect.");
-			fragment.getMessageView().setTextColor(Color.RED);
+			fragment.loginFailedUIUpdate();
 			//fragment.getLoginButton().setEnabled(true);
 			//fragment.getFBLoginButton().setEnabled(true);
 		}
@@ -53,11 +52,9 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	protected Boolean doInBackground(Context... contexts) {
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
-		
+		//
 		//Disable login button and display logging in ... message
-		//fragment.getLoginButton().setEnabled(false);
-		//fragment.getFBLoginButton().setEnabled(false);
-		fragment.getMessageView().setText("Logging in ...");
+		
 
 		
 		user = WillGiveLoginUtils.postToLogin(username, password);

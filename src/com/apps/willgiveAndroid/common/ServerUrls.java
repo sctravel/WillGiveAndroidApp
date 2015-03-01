@@ -3,7 +3,7 @@ package com.apps.willgiveAndroid.common;
 public class ServerUrls {
 	
 	//Service URLs
-	public static String HOST_URL = "http://www.willgive.com";  //my mac ip for now
+	public static String HOST_URL = "http://www.willgive.org";  //my mac ip for now
 	
 	public static String CHARITY_PROFILE_PICTURE_PATH_PREFIX = "/resources/recipients/profilePicture/pp_";
 

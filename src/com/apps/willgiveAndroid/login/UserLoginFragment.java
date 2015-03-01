@@ -59,6 +59,18 @@ public class UserLoginFragment extends Fragment {
     	return messageView;
     }
 
+    public void loginUIUpdate() {
+    	loginButton.setEnabled(false);
+    	fbLoginBtn.setEnabled(false);
+    	messageView.setText("Logging in ...");
+    }
+    
+    public void loginFailedUIUpdate() {
+    	messageView.setText("Email or password is incorrect.");
+    	messageView.setTextColor(Color.RED);
+    	loginButton.setEnabled(true);
+    	fbLoginBtn.setEnabled(true);
+    }
     private UiLifecycleHelper uiHelper;
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
@@ -83,13 +95,14 @@ public class UserLoginFragment extends Fragment {
             		messageView.setText("Email or password can not be empty");
             		messageView.setTextColor(Color.RED);
             	} else {
+            		loginUIUpdate();
                     loginTask = new UserLoginAsyncTask( UserLoginFragment.this, email, password);
             		loginTask.execute(getActivity().getApplicationContext());
             	}
 			} else if( provider.trim().equalsIgnoreCase( Constants.WILLGIVE_LOGIN_PROVIDER_FACEBOOK ) ) {
 				//Login with facebook
 				Log.d("Login", "provider facebook");
-
+				//loginUIUpdate();
 				onClickLogin();
 			} else {
 				Log.i("Login", "Do nothing!!!provider-"+provider.trim()+"; "+ (provider.trim() == Constants.WILLGIVE_LOGIN_PROVIDER_WILLGIVE) );
@@ -121,6 +134,8 @@ public class UserLoginFragment extends Fragment {
         passwordView = (EditText) view.findViewById(R.id.loginPasswordInput);
         messageView = (TextView) view.findViewById(R.id.loginMessageView);
         registerView = (TextView) view.findViewById(R.id.link_to_register);
+        fbLoginBtn = (LoginButton) view.findViewById(R.id.fb_login_button);
+
         autoLogin();
         
         registerView.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +170,6 @@ public class UserLoginFragment extends Fragment {
             }
         });	
         
-        fbLoginBtn = (LoginButton) view.findViewById(R.id.fb_login_button);
         fbLoginBtn.setReadPermissions(Arrays.asList("email", "public_profile"));
         //Need to change to on click
         fbLoginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
