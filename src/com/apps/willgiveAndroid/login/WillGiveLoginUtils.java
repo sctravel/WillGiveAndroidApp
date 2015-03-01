@@ -28,7 +28,7 @@ import com.apps.willgiveAndroid.utils.HttpClientFactory;
 
 public class WillGiveLoginUtils {
 
-	public static Boolean logout() {
+	public static boolean logout() {
 		try {
 		    // Add your data
 		    HttpGet httpget = new HttpGet(ServerUrls.HOST_URL+ServerUrls.LOG_OUT_PATH);

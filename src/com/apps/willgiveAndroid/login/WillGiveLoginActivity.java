@@ -3,6 +3,8 @@ package com.apps.willgiveAndroid.login;
 import com.apps.willgiveAndroid.R;
 import com.apps.willgiveAndroid.R.id;
 import com.apps.willgiveAndroid.R.layout;
+import com.apps.willgiveAndroid.common.Constants;
+import com.apps.willgiveAndroid.user.User;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +13,7 @@ import java.util.Arrays;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -45,6 +48,23 @@ public class WillGiveLoginActivity extends FragmentActivity {
 	
 	  super.onCreate(savedInstanceState);
 	  setContentView(R.layout.login_signup_activity);
+	  
+	  Bundle extras = getIntent().getExtras();
+      //TODO: we also need to get marked questions' information
+      if (extras != null) {
+	       //exam = (Exam) extras.getSerializable("exam");
+	       boolean isLoggedOut = extras.getBoolean("isLoggedOut",false);  
+	       if(isLoggedOut) {
+	    	   Log.d("Login", "isLoggedOut is true");
+	    	   SharedPreferences userCredentialPref = getSharedPreferences(Constants.USER_CREDENTIALS_PREF_NAME, 0);
+	   		   SharedPreferences.Editor editor = userCredentialPref.edit();
+
+	   		   editor.clear();
+	   		   editor.commit();
+
+	       }
+      }  
+	  
 		
 	  Fragment fragment = new UserLoginFragment();
 	  FragmentManager fm = getSupportFragmentManager();

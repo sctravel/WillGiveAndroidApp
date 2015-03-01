@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.apps.willgiveAndroid.HotCharityFragment.FragmentCallback;
 import com.apps.willgiveAndroid.WillGiveMainPageActivity;
+import com.apps.willgiveAndroid.common.Constants;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -34,9 +35,9 @@ public class RetrieveAllCharityAsyncTask extends AsyncTask<Context, Integer, Boo
 	protected Boolean doInBackground(Context... contexts) {
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
-		
-		List<Charity> charityList = WillGiveCharityUtils.getAllCharities();
-		activity.setCharityList(charityList);
+		List<Charity> existingCharityList = activity.getCharityList();
+		List<Charity> charityList = WillGiveCharityUtils.getAllCharities(existingCharityList.size(), Constants.NUM_CHARITIES_PER_PULL);
+		existingCharityList.addAll(charityList);
 		return true;
 	}
 

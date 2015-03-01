@@ -39,6 +39,7 @@ public class NetworkHelper {
 	    } catch (Exception e) {
 	        Log.d("NetworkHelper", "Network exception", e);
 	    }
+	    
 	    return content;
 	}
 }

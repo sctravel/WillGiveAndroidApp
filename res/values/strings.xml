@@ -121,4 +121,15 @@
   <string name="wifi_changing_network">Requesting connection to network\u2026</string>
   <string name="wifi_ssid_label">Network Name</string>
   <string name="wifi_type_label">Type</string>
+  
+  <string name="share_twitter">Twitter</string>
+  <string name="share_facebook">Facebook</string>
+  <string name="share_sms">SMS</string>
+  <string name="share_email_gmail">Gmail</string>
+  <string name="share_email_subject">Welcome to WillGive</string>
+  <string name="share_chooser_text">Please choose</string>
+  <string name="share_email_native">Email</string>
+  
+  
+  
 </resources>

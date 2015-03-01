@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import com.apps.willgiveAndroid.R;
+import com.apps.willgiveAndroid.common.Constants;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -14,6 +15,7 @@ import com.facebook.widget.LoginButton.UserInfoChangedCallback;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -47,7 +49,12 @@ public class UserLoginFragment extends Fragment {
     
     private static final String TAG = "WillGiveLoginActivity";
 
-    
+    public Button getLoginButton() {
+    	return loginButton;
+    }
+    public LoginButton getFBLoginButton() {
+    	return fbLoginBtn;
+    }
     public TextView getMessageView() {
     	return messageView;
     }
@@ -60,6 +67,39 @@ public class UserLoginFragment extends Fragment {
         }
     };
     
+    private void autoLogin() {
+		SharedPreferences userCredentialPref = getActivity().getSharedPreferences(Constants.USER_CREDENTIALS_PREF_NAME, 0);
+		if( userCredentialPref!=null && userCredentialPref.contains("provider") ) {
+			Log.d("Login", "userCredentialPref exists");
+			String provider = userCredentialPref.getString("provider", "");
+			Log.d("Login", "provider exists-"+provider);
+
+			if( provider.trim().equalsIgnoreCase( Constants.WILLGIVE_LOGIN_PROVIDER_WILLGIVE ) ) {
+				Log.d("Login", "provider willgive!!!!!");
+
+				String email = userCredentialPref.getString("email", "");
+				String password = userCredentialPref.getString("password", "");
+				if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty() ) {
+            		messageView.setText("Email or password can not be empty");
+            		messageView.setTextColor(Color.RED);
+            	} else {
+                    loginTask = new UserLoginAsyncTask( UserLoginFragment.this, email, password);
+            		loginTask.execute(getActivity().getApplicationContext());
+            	}
+			} else if( provider.trim().equalsIgnoreCase( Constants.WILLGIVE_LOGIN_PROVIDER_FACEBOOK ) ) {
+				//Login with facebook
+				Log.d("Login", "provider facebook");
+
+				onClickLogin();
+			} else {
+				Log.i("Login", "Do nothing!!!provider-"+provider.trim()+"; "+ (provider.trim() == Constants.WILLGIVE_LOGIN_PROVIDER_WILLGIVE) );
+			}
+		}
+		Log.d("Login", "auto login ends");
+
+	    
+    }
+    
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in...");
@@ -67,13 +107,15 @@ public class UserLoginFragment extends Fragment {
             Log.i(TAG, "Logged out...");
         }
     }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.willgive_login, container, false);
 
         uiHelper = new UiLifecycleHelper(getActivity(), statusCallback);
         uiHelper.onCreate(savedInstanceState);
-  
+        autoLogin();
+
         loginButton = (Button) view.findViewById(R.id.loginButton);
         usernameView = (EditText) view.findViewById(R.id.loginUserNameInput);
         passwordView = (EditText) view.findViewById(R.id.loginPasswordInput);
@@ -94,6 +136,8 @@ public class UserLoginFragment extends Fragment {
             	messageView.setText("");
             	String username = usernameView.getText().toString();
             	String password = passwordView.getText().toString();
+            	
+            	
             	if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty() ) {
 
             	    //Prompt for username and password
@@ -127,6 +171,7 @@ public class UserLoginFragment extends Fragment {
             }
         });
         
+
         return view;
     }	     
 
@@ -160,7 +205,6 @@ public class UserLoginFragment extends Fragment {
     public void onPause() {
         super.onPause();
         uiHelper.onPause();
-
 	}
  
     @Override

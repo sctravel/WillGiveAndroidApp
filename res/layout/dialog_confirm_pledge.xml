@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+ 
+    <TextView
+        android:id="@+id/confirmPledgeDialogMessageTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+         />
+ 
+    <TextView
+        android:id="@+id/confirmPledgeReminderTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text = "Please enter the amount: "
+        android:textColor = "@color/green_button"
+        android:textSize = "20dp"
+        android:layout_below="@+id/confirmPledgeDialogMessageTextView"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+         />
+    
+    <EditText
+        android:id="@+id/pledgeAmountText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint=" Amount "
+        android:layout_below="@+id/confirmPledgeReminderTextView"/>
+ 
+     <Button
+        android:id="@+id/confirmPledgeButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity = "center"
+        android:layout_gravity = "center"
+        android:background="@color/green_button"
+        android:text=" Confirm "
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/pledgeAmountText"
+        />
+ 
+</RelativeLayout>

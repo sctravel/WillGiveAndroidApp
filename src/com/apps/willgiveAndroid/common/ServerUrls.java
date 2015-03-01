@@ -3,7 +3,7 @@ package com.apps.willgiveAndroid.common;
 public class ServerUrls {
 	
 	//Service URLs
-	public static String HOST_URL = "http://192.168.0.103";  //my mac ip for now
+	public static String HOST_URL = "http://www.willgive.com";  //my mac ip for now
 	
 	public static String CHARITY_PROFILE_PICTURE_PATH_PREFIX = "/resources/recipients/profilePicture/pp_";
 
@@ -26,5 +26,6 @@ public class ServerUrls {
 	public static String MOBILE_FACEBOOK_LOGIN_PATH = "/auth/facebook/token";
 	public static String QR_SCAN_PATH = "/c/"; //need to append id
 	
+	public static String PAYMENT_USER_PLEDGE_PATH = "/payment/pledge";
 	//#120220150  #
 }

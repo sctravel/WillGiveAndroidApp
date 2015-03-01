@@ -105,4 +105,6 @@ public class ScanFragment extends Fragment {
 		
 		//finishActivity(requestCode);
 	}
+    
+    
 }

@@ -16,18 +16,16 @@ import android.widget.ProgressBar;
 public class SearchCharityAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	
 	private WillGiveMainPageActivity activity;
-	private FragmentCallback fragmentCallback;
+	private String keyword;
 	
-	public SearchCharityAsyncTask(FragmentCallback fragmentCallback, WillGiveMainPageActivity activity){		
+	public SearchCharityAsyncTask(WillGiveMainPageActivity activity, String keyword){		
 		this.activity =activity; 
-		this.fragmentCallback = fragmentCallback;
+		this.keyword = keyword;
 	}
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
-		fragmentCallback.onTaskDone();
-					
+		super.onPostExecute(result);					
 	}
 	
 	@Override
@@ -35,7 +33,7 @@ public class SearchCharityAsyncTask extends AsyncTask<Context, Integer, Boolean>
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
 		
-		List<Charity> charityList = WillGiveCharityUtils.getAllCharities();
+		List<Charity> charityList = WillGiveCharityUtils.searchCharityByKeyword(keyword);
 		activity.setCharityList(charityList);
 		return true;
 	}

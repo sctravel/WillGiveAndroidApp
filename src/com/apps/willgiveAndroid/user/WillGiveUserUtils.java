@@ -25,11 +25,55 @@ import com.apps.willgiveAndroid.utils.StringUtils;
 
 public class WillGiveUserUtils {
 	
+	public static List<UserTransaction> getUserTransactionHistory(Long userId) {
+		List<UserTransaction> transactionHistory = new ArrayList<UserTransaction>();
+		String url = ServerUrls.HOST_URL+ServerUrls.GET_USER_TRANSACTIONS_PATH;
+		HttpGet requestMeta = new HttpGet(url);
+		try {
+			HttpResponse responseMeta = HttpClientFactory.getThreadSafeClient().execute(requestMeta);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(responseMeta.getEntity().getContent(), "UTF-8"));
+			String jsonStr = "";
+			String str="";
+			while((str=reader.readLine())!=null){
+				jsonStr+=str;	
+			}
+			
+			//Log.d("DownloadUsingRestfulAPI", "getting meta data jsonStr "+ jsonStr);
+			
+		    JSONParser parser = new JSONParser();
+			Object obj = parser.parse(jsonStr);
+			JSONArray transactions = (JSONArray) obj;
+			
+		    Iterator<JSONObject> iterator = transactions.iterator();
+		    while (iterator.hasNext()) {
+		    	JSONObject transactionJson = (JSONObject)iterator.next();
+		    	
+		    	String transactionId = (String) transactionJson.get("transactionId");
+		    	Double amount = (Double) transactionJson.get("amount");
+		    	Long recipientId = (Long) transactionJson.get("recipientId");
+		    	String dateTime = (String) transactionJson.get("dateTime");
+		    	String settleTime = (String) transactionJson.get("settleTime");
+		    	String status = (String) transactionJson.get("status");
+		    	
+		    	UserTransaction tran = new UserTransaction(transactionId, userId, recipientId, amount, dateTime, settleTime, status);
+		    	
+		    	transactionHistory.add(tran);
+		    }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		    
+		return transactionHistory;
+	}
+	
 	//TODO finish it
 	public static boolean setUserFavorateCharity(String charityId, String value) {
 		//This is a get request using query parameters  maybe need to change it
 		String url = ServerUrls.HOST_URL + ServerUrls.SET_USER_FAV_CHARITY_PATH + "?rid="+charityId+"&value="+value;
-
 		
 		return true;
 	}

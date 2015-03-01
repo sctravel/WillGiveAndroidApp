@@ -2,13 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:background="@drawable/text_view_box"
-    android:padding="1dip" >
+    android:background="#ffffff"
+    android:padding="5dip"
+    android:layout_marginTop="15dip" >
 
     <ImageView
         android:id="@+id/charityListItemIcon"
-        android:layout_width="120dp"
-        android:layout_height="100dp"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="3dip"

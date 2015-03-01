@@ -77,7 +77,7 @@ public class CharityListArrayAdapter extends ArrayAdapter<Charity>{
 	    //imageView.setImageResource(R.drawable.icon_exam);
 	    //ImageLoader.getInstance().displayImage(charityPicturePath, imageView, options);
 	    if(!imageMap.containsKey(charityId)) {
-    	    String charityPicturePath = ServerUrls.HOST_URL + ServerUrls.CHARITY_PROFILE_PICTURE_PATH_PREFIX + charityId;
+    	    String charityPicturePath = ServerUrls.HOST_URL + ServerUrls.CHARITY_PROFILE_PICTURE_PATH_PREFIX + charityId+"_small";
     	    imageLoader.loadImage(charityPicturePath, targetSize, options, new SimpleImageLoadingListener() {
     	        @Override
     	        public void onLoadingComplete(String imageUri, View view, android.graphics.Bitmap loadedImage) {

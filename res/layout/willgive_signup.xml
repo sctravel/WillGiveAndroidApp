@@ -13,14 +13,17 @@
         <LinearLayout android:id="@+id/header"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dip"
-                android:background="@color/green_button"
+                android:paddingTop="25dip"
                 android:paddingBottom="5dip">
                 <!-- Logo Start-->
-                <ImageView android:src="@drawable/header_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dip"/>
+                <TextView android:text="Will Give"
+                     android:textSize="25dip"
+                     android:textColor="@color/green_button"
+                     android:layout_gravity="center_vertical|center_horizontal"
+                     android:gravity="center"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                />
                 <!-- Logo Ends -->
         </LinearLayout>
         <!--  Header Ends -->
@@ -81,8 +84,9 @@
           <!-- Register Button -->
           <Button android:id="@+id/btnRegister"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_marginTop="10dip"
+                android:textSize="18dp"
                 android:background="@color/green_button"
                 android:text="Register New Account"/>
           <TextView 
@@ -107,9 +111,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
                 android:layout_marginBottom="20dip"
-                android:text="Already has account! Login here"
+                android:text="Already has account? Login here"
                 android:gravity="center"
-                android:textSize="20dip"
+                android:textSize="15dp"
                 android:textColor="#025f7c"/>
  
         </LinearLayout>

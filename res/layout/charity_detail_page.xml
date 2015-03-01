@@ -1,57 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  xmlns:facebook="http://schemas.android.com/apk/res-auto"
-  android:fillViewport="true">
-		<LinearLayout 
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    android:orientation="vertical" >
-		    
-		    <ImageView
-		        android:id="@+id/charityProfilePicture"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:contentDescription="TODO"
-		         />
-		    
-			 <TextView
-			    android:id="@+id/charityName"     
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:gravity="center"
-		        android:layout_marginTop="10dip"
-		        android:layout_gravity="center"
-		        android:textSize="30dp" />
-			 
-			 <TextView
-			    android:id="@+id/charityInfo"     
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		 		android:gravity="center"
-		 		android:layout_marginTop="10dip"
-				android:layout_marginBottom="10dip"
-		        android:layout_gravity="center"
-		        android:text="" />
-			 
-			 <TextView
-			    android:id="@+id/charityMission"     
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		 		android:gravity="center"
-		        android:layout_gravity="center"
-		        android:text="" />
-			 
-			 <Button 
-			     android:id="@+id/charityContribution" 
-			     android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent" >
+
+	<ScrollView
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent"
+	  android:fillViewport="true">
+			<LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="vertical" >
+			    
+			    <ImageView
+			        android:id="@+id/charityProfilePicture"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:contentDescription="TODO"
+			         />
+			    
+				 <TextView
+				    android:id="@+id/charityName"     
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:gravity="center"
+			        android:layout_marginTop="10dip"
+			        android:layout_gravity="center"
+			        android:textSize="20dp" 
+			        android:textColor="@color/green_button"/>
+				 
+				 <TextView
+				    android:id="@+id/charityMission"     
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			 		android:gravity="center"
+			        android:layout_gravity="center"
+			         />
+				 
+				 <LinearLayout 
+				     android:layout_width="match_parent"
+			    	 android:layout_height="match_parent"
+			    	 android:orientation="horizontal"
+			    	 android:layout_marginTop="10dip"
+					 android:layout_marginBottom="10dip">
+				     
+					 <TextView
+					    android:id="@+id/charityPhone"     
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				 		android:gravity="center"
+				        android:layout_gravity="center"
+				        android:text="" />
+					  <TextView
+					    android:id="@+id/charityAddress"     
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				 		android:gravity="center"
+				        android:layout_gravity="center"
+				        android:text="" />
+					   <TextView
+					    android:id="@+id/charityEIN"     
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				 		android:gravity="center"
+				        android:layout_gravity="center"
+				        android:text="" />
+					 
+			     </LinearLayout>
+				 
+				 
+				 
+				
+				 
+			</LinearLayout>
+	</ScrollView>
+ 		<Button 
+			     android:id="@+id/userPledgeButton" 
+			     android:layout_width="fill_parent"
 		         android:layout_height="wrap_content"
 		         android:gravity="center"
+		         android:background="@color/green_button"
 		         android:layout_gravity="center"
-		         android:text="Contribute"
+		         android:layout_alignParentBottom="true"
+		         android:text="Pledge"
 			     />
-			 
-		</LinearLayout>
-</ScrollView>
+</RelativeLayout>

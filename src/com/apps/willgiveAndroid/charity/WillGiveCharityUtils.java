@@ -70,71 +70,30 @@ public class WillGiveCharityUtils {
 	
 	
 	public static Charity getCharityByEIN(String EIN) {
-		Charity charity = null;
 		String url = ServerUrls.HOST_URL + ServerUrls.GET_CHARITY_BY_EIN_PATH + EIN;
-		Log.d("URL", url);
-		HttpGet requestMeta = new HttpGet(url);
-		try {
-			HttpResponse responseMeta = HttpClientFactory.getThreadSafeClient().execute(requestMeta);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(responseMeta.getEntity().getContent(), "UTF-8"));
-			String jsonStr = "";
-			String str="";
-			while((str=reader.readLine())!=null){
-				jsonStr+=str;	
-			}
-			
-			//handle failure SERVICE_CALL_FAILED
-			//Log.d("DownloadUsingRestfulAPI", "getting meta data jsonStr "+ jsonStr);
-			
-		    JSONParser parser = new JSONParser();
-			Object obj = parser.parse(jsonStr);
-			JSONObject charityJson = (JSONObject) obj;	   
-			Long charityId = (Long) charityJson.get("recipient_id");
-	        String name = (String) charityJson.get("name");
-	        String email = (String) charityJson.get("email");
-	        String ein = (String) charityJson.get("EIN");
-	        String category = (String) charityJson.get("category");
-	        String address = (String) charityJson.get("address");
-	        String city = (String) charityJson.get("city");
-	        String state = (String) charityJson.get("state");
-	        String country = (String) charityJson.get("country");
-	        String zipcode = (String) charityJson.get("zipcode");
-	        String phone = (String) charityJson.get("phone");
-	        String fax = (String) charityJson.get("fax");
-	        String contactPersonName = (String) charityJson.get("contactPersonName");
-	        String contactPersonTitle = (String) charityJson.get("contactPersonTitle");
-	        String mission = (String) charityJson.get("mission");
-	        String website = (String) charityJson.get("website");
-	        String facebookUrl = (String) charityJson.get("facebookUrl");
-	        //Double rating = (Double) charityJson.get("rating"); //need to change DB, make it number
-	        String imagePath = (String) charityJson.get("imagePath");
-	        String videoUrl = (String) charityJson.get("videoUrl");
-	        String status = (String) charityJson.get("status");
-
-	        
-	        charity = new Charity( charityId ,  email,  name,  ein,
-	    			category, address, city, state,
-	    			country, zipcode, phone, fax,
-	    			mission, ServerUrls.CHARITY_PROFILE_PICTURE_PATH_PREFIX, videoUrl, website,
-	    			facebookUrl, imagePath, 0.0, status,
-	    			contactPersonName, contactPersonTitle);
-			Log.d("Charity", "Id- "+ charityId+"; name- "+name+"; EIN- "+ein+"; Address- "+address);
-	        //Insert Course MetaData to DB
-		    
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return charity;
+		return getCharityHelper(url);
 	}
 	
 	public static Charity getCharityById(String charityId) {
 		Charity charity = null;
 		String url = ServerUrls.HOST_URL + ServerUrls.GET_CHARITY_BY_ID_PATH + charityId;
+		return getCharityHelper(url);
+	}
+	
+	public static List<Charity> getAllCharities(long start, long count) {
+		String url = ServerUrls.HOST_URL+ServerUrls.ALL_CHARITIES_PATH+"?start="+start+"&count=?";		
+		return getCharityListHelper(url);
+	}
+	
+	public static List<Charity> searchCharityByKeyword(String keyword) {
+		String url = ServerUrls.HOST_URL+ServerUrls.SEARCH_CHARITY_PATH+"?keyword="+keyword;
+		return getCharityListHelper(url);
+	}
+	
+	//get one charity
+	private static Charity getCharityHelper(String url) {
+		
+		Charity charity = null;
 		Log.d("URL", url);
 		HttpGet requestMeta = new HttpGet(url);
 		try {
@@ -153,6 +112,7 @@ public class WillGiveCharityUtils {
 			Object obj = parser.parse(jsonStr);
 			JSONObject charityJson = (JSONObject) obj;	   
 		    	
+	        Long charityId = (Long) charityJson.get("recipient_id");
 	        String name = (String) charityJson.get("name");
 	        String email = (String) charityJson.get("email");
 	        String ein = (String) charityJson.get("EIN");
@@ -175,7 +135,7 @@ public class WillGiveCharityUtils {
 	        String status = (String) charityJson.get("status");
 
 	        
-	        charity = new Charity( Long.parseLong(charityId),  email,  name,  ein,
+	        charity = new Charity( charityId,  email,  name,  ein,
 	    			category, address, city, state,
 	    			country, zipcode, phone, fax,
 	    			mission, ServerUrls.CHARITY_PROFILE_PICTURE_PATH_PREFIX, videoUrl, website,
@@ -194,9 +154,11 @@ public class WillGiveCharityUtils {
 		
 		return charity;
 	}
-	public static List<Charity> getAllCharities() {
-		List<Charity> charityList = new ArrayList<Charity>();
-		String url = ServerUrls.HOST_URL+ServerUrls.ALL_CHARITIES_PATH;
+
+	//get a list of charities
+	private static List<Charity> getCharityListHelper(String url) {
+		List<Charity> results = new ArrayList<Charity>();
+		
 		Log.d("URL", url);
 
 		HttpGet requestMeta = new HttpGet(url);
@@ -250,7 +212,7 @@ public class WillGiveCharityUtils {
 		    			facebookUrl, imagePath,  0.0, status,
 		    			contactPersonName, contactPersonTitle);
 				Log.d("Charity", "Id- "+ charityId+"; name- "+name+"; EIN- "+ein+"; Address- "+address);
-				charityList.add(charity);
+				results.add(charity);
 		        //Insert Course MetaData to DB
 		    }
 		} catch (IOException e) {
@@ -261,7 +223,6 @@ public class WillGiveCharityUtils {
 			e.printStackTrace();
 		}
 		
-		return charityList;
+		return results;
 	}
-
 }

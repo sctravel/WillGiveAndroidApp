@@ -10,9 +10,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_alignParentLeft="true"
-      	    android:gravity="right"
-      	    android:layout_gravity="right"
-      	    android:background="@drawable/icon_prev"
+      	    android:gravity="center"
+      	    android:layout_gravity="center_horizontal"
+      	    android:background="@drawable/ic_action_photo"
             android:text="Scan" />
     
     <TextView

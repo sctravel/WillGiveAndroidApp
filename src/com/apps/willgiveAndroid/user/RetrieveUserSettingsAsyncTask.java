@@ -19,8 +19,7 @@ public class RetrieveUserSettingsAsyncTask extends AsyncTask<Context, Integer, B
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
-					
+		super.onPostExecute(result);				
 	}
 	
 	@Override
