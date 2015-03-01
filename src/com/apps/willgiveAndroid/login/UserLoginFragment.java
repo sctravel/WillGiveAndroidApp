@@ -114,13 +114,14 @@ public class UserLoginFragment extends Fragment {
 
         uiHelper = new UiLifecycleHelper(getActivity(), statusCallback);
         uiHelper.onCreate(savedInstanceState);
-        autoLogin();
+        
 
         loginButton = (Button) view.findViewById(R.id.loginButton);
         usernameView = (EditText) view.findViewById(R.id.loginUserNameInput);
         passwordView = (EditText) view.findViewById(R.id.loginPasswordInput);
-        messageView = (TextView) view.findViewById(R.id.messageView);
+        messageView = (TextView) view.findViewById(R.id.loginMessageView);
         registerView = (TextView) view.findViewById(R.id.link_to_register);
+        autoLogin();
         
         registerView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
