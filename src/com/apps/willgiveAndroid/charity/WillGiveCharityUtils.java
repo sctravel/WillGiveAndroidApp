@@ -81,7 +81,7 @@ public class WillGiveCharityUtils {
 	}
 	
 	public static List<Charity> getAllCharities(long start, long count) {
-		String url = ServerUrls.HOST_URL+ServerUrls.ALL_CHARITIES_PATH+"?start="+start+"&count=?";		
+		String url = ServerUrls.HOST_URL+ServerUrls.ALL_CHARITIES_PATH+"?start="+start+"&count="+count;		
 		return getCharityListHelper(url);
 	}
 	
