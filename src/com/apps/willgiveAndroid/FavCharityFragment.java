@@ -46,7 +46,9 @@ public class FavCharityFragment extends Fragment {
     	View listHeader = getActivity().getLayoutInflater().inflate(R.layout.charity_list_header, null);
 	    listHeader.setClickable(false);
 	    listView.addHeaderView(listHeader);
-        
+	    TextView headerView = (TextView) listHeader.findViewById(R.id.charityListHeaderTextView);
+	    headerView.setText("My Favorate");
+	    
         ( new RetrieveUserFavorateCharitiesAsyncTask( FavCharityFragment.this, listView )
         ).execute(context);
                

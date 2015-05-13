@@ -18,12 +18,14 @@ public class UserPledgeAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	private Dialog confirmDialog;
 	private Double amount;
 	private Long recipientId;
+	private String notes;
 	
-	public UserPledgeAsyncTask(CharityDetailPageActivity activity, Double amount, Long recipientId, Dialog confirmDialog){		
+	public UserPledgeAsyncTask(CharityDetailPageActivity activity, Double amount, Long recipientId, String notes, Dialog confirmDialog){		
 		this.activity =activity; 
 		this.amount = amount;
 		this.recipientId = recipientId;
 		this.confirmDialog = confirmDialog;
+		this.notes = notes;
 	}
 	
 	@Override
@@ -48,6 +50,6 @@ public class UserPledgeAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		Context context = contexts[0];
 					
 	   //Do we need to open browser to let people approve it ?
-	    return WillGivePaymentUtils.sendPledge(activity.getUser().getId(), amount, recipientId);
+	    return WillGivePaymentUtils.sendPledge(activity.getUser().getId(), amount, recipientId, notes, context);
 	}
 }

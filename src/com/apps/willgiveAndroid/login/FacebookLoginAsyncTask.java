@@ -36,8 +36,7 @@ public class FacebookLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>
 		    fragment.getActivity().startActivity(intent);
 		    fragment.getActivity().finish();
 		} else {
-			fragment.getMessageView().setText("Email or password is incorrect.");
-			fragment.getMessageView().setTextColor(Color.RED);
+			fragment.loginFailedUIUpdate();
 		}
 		
 	}
@@ -46,20 +45,19 @@ public class FacebookLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>
 	protected Boolean doInBackground(Context... contexts) {
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
+		Log.w("FB Login Async", "runing FB login async task");
 		//TODO:  use correct username password
-		user = WillGiveLoginUtils.FacebookLogin(accessToken, refreshToken);
+		user = WillGiveLoginUtils.facebookLogin(accessToken, refreshToken, context);
 		if(user != null)  {   
 			//Store user object to shared preferences
+			WillGiveUserUtils.saveUserObjectToPreferences(user, context);
 			//Syncing the settings once user logged in 
-			SharedPreferences userCredentialPref = fragment.getActivity().getSharedPreferences(Constants.USER_CREDENTIALS_PREF_NAME, 0);
-			SharedPreferences.Editor editor = userCredentialPref.edit();
-		    editor.putString("email", user.getEmail());
-		    editor.putString("provider", Constants.WILLGIVE_LOGIN_PROVIDER_FACEBOOK);
-		    
-		    // Commit the edits!
-		    editor.commit();
+			// no password
+			WillGiveUserUtils.saveUserCredentialPreferences(user.getEmail(), "", Constants.WILLGIVE_LOGIN_PROVIDER_FACEBOOK, context);
+			
 			return true;	
-		}
+		} 
+		
 		return false;
 	}
 

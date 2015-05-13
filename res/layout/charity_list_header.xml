@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_button"
     android:orientation="vertical" >
     
 	<TextView 
+	    android:id="@+id/charityListHeaderTextView"
          android:layout_width="fill_parent"
          android:layout_height="fill_parent"
          android:layout_gravity="center_vertical|center_horizontal"
          android:gravity="center"
-         android:text="WillGive Explore"
+         android:text="Charity Explore"
+         android:textColor="@color/green_button"
          android:textSize="30sp" 
          android:layout_marginBottom="20dip"
          />

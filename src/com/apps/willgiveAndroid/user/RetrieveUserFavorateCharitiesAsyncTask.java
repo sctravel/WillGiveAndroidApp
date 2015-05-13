@@ -54,7 +54,6 @@ public class RetrieveUserFavorateCharitiesAsyncTask  extends AsyncTask<Context, 
                      int position, long id) {
                      // ListView Clicked item value
             	  Charity charity = (Charity) listView.getItemAtPosition(position);
-     			  Toast.makeText(context, "This is charity ", Toast.LENGTH_LONG).show();
      			  
      			  Intent intent = new Intent(fragment.getActivity(), CharityDetailPageActivity.class); 
      			  intent.putExtra("charity", charity);

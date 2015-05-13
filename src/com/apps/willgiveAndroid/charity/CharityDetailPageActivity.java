@@ -6,12 +6,15 @@ import java.util.List;
 import net.sourceforge.zbar.Symbol;
 
 import com.apps.willgiveAndroid.R;
+import com.apps.willgiveAndroid.common.Constants;
 import com.apps.willgiveAndroid.common.ServerUrls;
 import com.apps.willgiveAndroid.payment.UserPledgeAsyncTask;
+import com.apps.willgiveAndroid.user.SetUserFavorateCharityAsyncTask;
 import com.apps.willgiveAndroid.user.User;
 import com.apps.willgiveAndroid.utils.ImageLoaderHelper;
 import com.dm.zbar.android.scanner.ZBarConstants;
 import com.dm.zbar.android.scanner.ZBarScannerActivity;
+import com.logentries.android.AndroidLogger;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.annotation.SuppressLint;
@@ -24,6 +27,9 @@ import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -45,16 +51,34 @@ import android.widget.Toast;
 public class CharityDetailPageActivity extends Activity{
 	
 	public final static String TAG = "CharityDetailPageActivity";
-	
+	AndroidLogger logger; 
+
 	private Charity charity;
 	private User user;
+	private TransactionSummaryForCharity summary;
 	
 	private Button pledgeButton;
 	private TextView charityNameView;
 	private ImageView charityImageView;
 	private TextView missionView;
 	
+	private ImageView favImageView ;
+	private TextView favView;
 	
+	
+	public TransactionSummaryForCharity getSummary() {
+		return summary;
+	}
+	public void setSummary(TransactionSummaryForCharity summary) {
+		this.summary = summary;
+	}
+	
+	public ImageView getFavImageView() {
+		return this.favImageView;
+	}
+	public TextView getFavView() {
+		return this.favView;
+	}
 	
 	public User getUser() {
 		return this.user;
@@ -64,11 +88,22 @@ public class CharityDetailPageActivity extends Activity{
 		return this.charity;
 	}
 	
+	public void updateTransactionSummaryView(TransactionSummaryForCharity summary) {
+		if(summary==null) return;
+		TextView summaryView = (TextView) findViewById(R.id.charityContributionSummary);
+		String s = "Total " + summary.getTotalCount() + " supporters contributed $"+summary.getTotalAmount();
+		if(summary.getDuration()!=null && summary.getDuration()>0) {
+			s = s+" in recent "+summary.getDuration() +" days.";
+		}
+		summaryView.setText(s);
+		summaryView.setTextColor(Color.GREEN);	
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
         setContentView(R.layout.charity_detail_page);
+        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.ANDROID_LOG_UUID, false);
         Bundle extras = getIntent().getExtras();
         //TODO: we also need to get marked questions' information
         if (extras != null) {
@@ -77,17 +112,95 @@ public class CharityDetailPageActivity extends Activity{
         	charity =  (Charity) extras.get("charity");  
 
 	        if( charity == null || user == null ) {
-	        	Log.e(TAG, "charity or user from Intent is null");
+	        	logger.error("charity or user from Intent is null");
 	        	this.finish();
 	        }
 
         }  else {
-        	Log.e(TAG, "Bundle from Intent is null");
+        	logger.error("Bundle from Intent is null");
         	this.finish();
         }
         setTitle("Hi, "+user.getFirstName());
         ImageLoaderHelper.initImageLoader(getApplicationContext());
 
+        favImageView = (ImageView) findViewById(R.id.charityDetailFavIcon);
+        favView = (TextView) findViewById(R.id.charityDetailFav);
+        if(charity.getIsFavored()) {
+        	favView.setText("Remove from favorate");
+        	favImageView.setImageResource(R.drawable.fav2);
+        	favView.setOnClickListener(new View.OnClickListener() {
+    			@Override
+    			public void onClick(View v) {
+    				AsyncTask<Context, Integer, Boolean> task = new SetUserFavorateCharityAsyncTask(CharityDetailPageActivity.this, 
+    						charity.getId().toString(), "N");
+    				task.execute(getApplicationContext());
+    			}
+    			
+        	});
+        } else {
+        	favView.setOnClickListener(new View.OnClickListener() {
+    			@Override
+    			public void onClick(View v) {
+    				AsyncTask<Context, Integer, Boolean> task = new SetUserFavorateCharityAsyncTask(CharityDetailPageActivity.this, 
+    						charity.getId().toString(), "Y");
+    				task.execute(getApplicationContext());
+    			}
+        	});
+        }
+        final TextView addressView = (TextView) findViewById(R.id.charityDetailAddress);
+        //addressView.setPaintFlags(addressView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        addressView.setText(charity.getAddress()+","+charity.getCity()+","+charity.getState()+","+charity.getZipcode());
+        /*addressView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String address = addressView.getText().toString();
+				if( address !=null && !address.trim().isEmpty() ) {
+					Log.i(TAG, "Direction to charity's address: "+address );
+					Intent i = new Intent(Intent.ACTION_CALL); //TODO: change to map
+					i.setData(Uri.parse(address));
+					startActivity(i);
+				}
+			}
+		});*/
+        
+        TextView phoneView = (TextView) findViewById(R.id.charityDetailPhone);
+        //phoneView.setPaintFlags(phoneView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        phoneView.setText(charity.getPhone());
+        //May need to process phone numbers
+        phoneView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String phone = charity.getPhone();
+				if( phone !=null && !phone.trim().isEmpty() ) {
+					phone = phone.trim();
+					logger.info("Call charity's phone: "+phone );
+					Intent i = new Intent(Intent.ACTION_CALL);
+					i.setData(Uri.parse("tel:"+phone ));
+					startActivity(i);
+				}
+			}
+		});
+        
+        
+        TextView websiteView = (TextView) findViewById(R.id.charityDetailWebsite);
+        //websiteView.setPaintFlags(websiteView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        websiteView.setText(charity.getWebsite());
+        websiteView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String url = charity.getWebsite();
+				if( url !=null && !url.trim().isEmpty() ) {
+					url = url.trim();
+					if (!url.startsWith("https://") && !url.startsWith("http://")){
+					    url = "http://" + url;
+					}
+					logger.info("Go to charity's website: "+url );
+					Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url) );
+					startActivity(i);
+				}
+			}
+		});
         
         //Need to make sure charity is not null
         charityNameView = (TextView) findViewById(R.id.charityName);
@@ -124,27 +237,29 @@ public class CharityDetailPageActivity extends Activity{
 	  * mShareActionProvider.setShareIntent()
 	  */
 	private Intent getDefaultIntent() {
-	    Intent intent = new Intent(Intent.ACTION_SEND);
-	    intent.setType("image/*");
-	    return intent;
+		Intent sendIntent = new Intent(Intent.ACTION_SEND);     
+	    // Native email client doesn't currently support HTML, but it doesn't hurt to try in case they fix it
+	    sendIntent.putExtra( Intent.EXTRA_TEXT, ServerUrls.CAHRITY_PAGE_URL+getCharity().getId() );
+	    sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Share WillGive Charity Url");
+	    sendIntent.setType("text/plain");
+	    return sendIntent;
 	}
 	
+	/*
 	public void onShareClick(View v) {
 	    Resources resources = getResources();
 
-	    Intent emailIntent = new Intent();
-	    emailIntent.setAction(Intent.ACTION_SEND);
+	    Intent sendIntent = new Intent(Intent.ACTION_SEND);     
 	    // Native email client doesn't currently support HTML, but it doesn't hurt to try in case they fix it
-	    emailIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(resources.getString(R.string.share_email_native)));
-	    emailIntent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.share_email_subject));
-	    emailIntent.setType("message/rfc822");
+	    sendIntent.putExtra( Intent.EXTRA_TEXT, ServerUrls.CAHRITY_PAGE_URL+getCharity().getId() );
+	    sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Share WillGive Charity Url");
+	    sendIntent.setType("text/plain");
 
 	    PackageManager pm = getPackageManager();
-	    Intent sendIntent = new Intent(Intent.ACTION_SEND);     
 	    sendIntent.setType("text/plain");
 
 
-	    Intent openInChooser = Intent.createChooser(emailIntent, resources.getString(R.string.share_chooser_text));
+	    Intent openInChooser = Intent.createChooser(sendIntent, resources.getString(R.string.share_chooser_text));
 
 	    List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
 	    List<LabeledIntent> intentList = new ArrayList<LabeledIntent>();        
@@ -153,7 +268,7 @@ public class CharityDetailPageActivity extends Activity{
 	        ResolveInfo ri = resInfo.get(i);
 	        String packageName = ri.activityInfo.packageName;
 	        if(packageName.contains("android.email")) {
-	            emailIntent.setPackage(packageName);
+	        	sendIntent.setPackage(packageName);
 	        } else if(packageName.contains("twitter") || packageName.contains("facebook") || packageName.contains("mms") || packageName.contains("android.gm")) {
 	            Intent intent = new Intent();
 	            intent.setComponent(new ComponentName(packageName, ri.activityInfo.name));
@@ -178,12 +293,21 @@ public class CharityDetailPageActivity extends Activity{
 	        }
 	    }
 
-	    // convert intentList to array
-	    LabeledIntent[] extraIntents = intentList.toArray( new LabeledIntent[ intentList.size() ]);
-
-	    openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents);
+	    
+	    openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray());
 	    startActivity(openInChooser);       
-	}
+	}*/
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+            	case android.R.id.home:
+            		//Log.i("Action bar", "Up button pressed");
+                    this.finish(); 
+
+            }
+            return true;
+    }
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -215,15 +339,17 @@ public class CharityDetailPageActivity extends Activity{
 			final TextView dialogMessageView = (TextView) dialog.findViewById(R.id.confirmPledgeDialogMessageTextView);
 			dialogMessageView.setText("");
 			final EditText amountText = (EditText) dialog.findViewById(R.id.pledgeAmountText);
+			final EditText notesText = (EditText) dialog.findViewById(R.id.pledgeNotesText);
 			Button confirmButton = (Button) dialog.findViewById(R.id.confirmPledgeButton);
 			
 			confirmButton.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Double amount = Double.parseDouble( amountText.getText().toString());		
+					Double amount = Double.parseDouble( amountText.getText().toString());	
+					String notes = notesText.getText().toString();
 					AsyncTask<Context, Integer, Boolean> task = 
-							new UserPledgeAsyncTask(CharityDetailPageActivity.this, amount, charity.getId(), dialog);
+							new UserPledgeAsyncTask(CharityDetailPageActivity.this, amount, charity.getId(), notes, dialog);
 					task.execute(getApplicationContext());
 				}
 	        });

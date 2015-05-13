@@ -2,31 +2,55 @@ package com.apps.willgiveAndroid.user;
 
 public class UserTransaction {
 	private String transactionId;
+	private String confirmationCode;
 	private Long userId;
 	private Long recipientId; //same as charityId 
+	private String recipientName; //same as charityId 
 	private Double amount;
 	private String dateTime;
 	private String settleTime;
 	private String status;
 	
-	public UserTransaction(String transactionId, Long userId, Long recipientId,
-			Double amount, String dateTime, String settleTime, String status) {
+	
+	public UserTransaction(String transactionId, String confirmationCode,
+			Long userId, Long recipientId, String recipientName, Double amount,
+			String dateTime, String settleTime, String status) {
 		super();
 		this.transactionId = transactionId;
+		this.confirmationCode = confirmationCode;
 		this.userId = userId;
 		this.recipientId = recipientId;
+		this.recipientName = recipientName;
 		this.amount = amount;
 		this.dateTime = dateTime;
 		this.settleTime = settleTime;
 		this.status = status;
 	}
-	
+
+	public String getConfirmationCode() {
+		return confirmationCode;
+	}
+
+	public void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
+	}
+
+	public String getRecipientName() {
+		return recipientName;
+	}
+
+	public void setRecipientName(String recipientName) {
+		this.recipientName = recipientName;
+	}
+
 	@Override
 	public String toString() {
-		return "UserTransaction [userId=" + userId + ", transactionId="
-				+ transactionId + ", recipientId=" + recipientId + ", amount="
-				+ amount + ", dateTime=" + dateTime + ", settleTime="
-				+ settleTime + ", status=" + status + "]";
+		return "UserTransaction [transactionId=" + transactionId
+				+ ", confirmationCode=" + confirmationCode + ", userId=" + userId
+				+ ", recipientId=" + recipientId + ", recipientName="
+				+ recipientName + ", amount=" + amount + ", dateTime="
+				+ dateTime + ", settleTime=" + settleTime + ", status="
+				+ status + "]";
 	}
 
 	@Override

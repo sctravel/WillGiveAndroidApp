@@ -8,6 +8,8 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -26,13 +29,21 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.apps.willgiveAndroid.R;
 import com.apps.willgiveAndroid.WillGiveMainPageActivity;
+import com.apps.willgiveAndroid.common.Constants;
+import com.apps.willgiveAndroid.login.UserLoginAsyncTask;
+import com.apps.willgiveAndroid.login.UserLoginFragment;
 import com.apps.willgiveAndroid.user.User;
+import com.apps.willgiveAndroid.user.WillGiveUserUtils;
+import com.logentries.android.AndroidLogger;
 
 public class SearchCharityActivity extends Activity {
 	
+	AndroidLogger logger;
 	private List<Charity> charityList;
     private User user; 
     private String query;
+    private AsyncTask<Context, Integer, Boolean> searchTask;
+    private ListView listView;
     
     public void setCharityList( List<Charity> list) {
     	this.charityList = list;
@@ -47,8 +58,18 @@ public class SearchCharityActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
+        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.ANDROID_LOG_UUID, false);
+
+    	user = WillGiveUserUtils.getUserObjectFromPreferences(getApplicationContext());
+    	logger.info("SearchCharityActivity User - " + user.toString());
+    	listView = new ListView(getApplicationContext());
+    	//View listHeader = getLayoutInflater().inflate(R.layout.charity_list_header, null);
+	    //listHeader.setClickable(false);
+	    //listView.addHeaderView(listHeader);
+	    
         handleIntent(getIntent());
-        Log.w("SearchCharityActivity","entering SearchCharityActivity");
+        
+        setContentView(listView);
     }
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
    	@Override
@@ -57,9 +78,9 @@ public class SearchCharityActivity extends Activity {
            MenuInflater inflater = getMenuInflater();
            inflater.inflate(R.menu.main_activity_menu, menu);
            MenuItem searchItem = menu.findItem(R.id.action_search);
-           SearchView mSearchView = (SearchView) searchItem.getActionView();
+           final SearchView mSearchView = (SearchView) searchItem.getActionView();
            if(mSearchView==null) {
-           		Log.w("search", "searchView is null");
+        	   logger.error("SearchView is null");
            } else {
 	   	        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	   	        SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
@@ -82,18 +103,35 @@ public class SearchCharityActivity extends Activity {
                @Override
                public boolean onMenuItemActionCollapse(MenuItem item) {
                    // Do something when collapsed
-               	Log.w("Search", "onMenuItemActionCollapse");
+                   Log.w("Search", "onMenuItemActionCollapse");
                    return true;  // Return true to collapse action view
                }
 
                @Override
                public boolean onMenuItemActionExpand(MenuItem item) {
                    // Do something when expanded
-               	Log.w("Search", "onMenuItemActionExpand");
+               	   Log.w("Search", "onMenuItemActionExpand");
 
                    return true;  // Return true to expand action view
                }
            });
+           
+           mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+               @Override
+               public boolean onSuggestionSelect(int position) {
+                   return true;
+               }
+
+               @Override
+               public boolean onSuggestionClick(int position) {
+                   CursorAdapter selectedView = mSearchView.getSuggestionsAdapter();
+                   Cursor cursor = (Cursor) selectedView.getItem(position);
+                   int index = cursor.getColumnIndexOrThrow(SearchManager.SUGGEST_COLUMN_TEXT_1);
+                   mSearchView.setQuery(cursor.getString(index), true);
+                   return true;
+               }
+           });
+           
            return super.onCreateOptionsMenu(menu);
        }
     @Override
@@ -105,48 +143,13 @@ public class SearchCharityActivity extends Activity {
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            Log.w("query", query==null? "null" : query);
+            logger.info("UserId: "+user.getId()+"; Search query: " + query==null? "null" : query);   
             
-            
+            searchTask = new SearchCharityAsyncTask( SearchCharityActivity.this, listView, query);
+            searchTask.execute(getApplicationContext());
             //use the query to search your data somehow
         }
     }
     
-    public void loadSearchResultsPage(final ListView listView, List<Charity> charityList, final Context context) {
-    	
-    	
-    	//LayoutParams lpbt = new LayoutParams((LayoutParams.MATCH_PARENT), (LayoutParams.WRAP_CONTENT));
-		//lpbt.gravity= Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL; 
-		//listView.setBackgroundResource(R.drawable.background); //setBackgroundColor(Color.BLUE);
-		//listView.setLayoutParams(lpbt);
-        
-	   /* View listHeader = context.getLayoutInflater().inflate(R.layout.course_list_header, null);
-	    listHeader.setClickable(false);
-	    listView.addHeaderView(listHeader);	*/
-	    
-		ArrayAdapter<Charity> adapter = new CharityListArrayAdapter(context,
-	              R.layout.charity_list_item, charityList);    
-        // Assign adapter to ListView
-        listView.setAdapter(adapter); 
-        
-        // ListView Item Click Listener
-            listView.setOnItemClickListener(new OnItemClickListener() {
- 
-                  @Override
-                  public void onItemClick(AdapterView<?> parent, View view,
-                     int position, long id) {
-                     // ListView Clicked item value
-            	  Charity charity = (Charity) listView.getItemAtPosition(position);
-     			  Toast.makeText(context, "This is charity ", Toast.LENGTH_LONG).show();
-     			  
-     			  Intent intent = new Intent(SearchCharityActivity.this, CharityDetailPageActivity.class); 
-     			  intent.putExtra("charity", charity);
-     			  //intent.putExtra("user", ( SearchCharityActivity.getUser() );
-     			  SearchCharityActivity.this.startActivity(intent);
-                  //beginExam(view, courseMeta, moduleId, emd.getExamId());
-              }
-
-         });             
-        //return listView;
-    }
+    
 }

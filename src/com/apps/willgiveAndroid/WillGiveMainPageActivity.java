@@ -9,15 +9,14 @@ import com.apps.willgiveAndroid.charity.RetrieveAllCharityAsyncTask;
 import com.apps.willgiveAndroid.charity.SearchCharityActivity;
 import com.apps.willgiveAndroid.charity.WillGiveCharityUtils;
 import com.apps.willgiveAndroid.charity.Charity;
+import com.apps.willgiveAndroid.common.Constants;
 import com.apps.willgiveAndroid.login.UserLoginAsyncTask;
 import com.apps.willgiveAndroid.login.UserLogoutAsyncTask;
 import com.apps.willgiveAndroid.login.WillGiveLoginActivity;
 import com.apps.willgiveAndroid.user.RetrieveUserSettingsAsyncTask;
 import com.apps.willgiveAndroid.user.User;
 import com.apps.willgiveAndroid.utils.ImageLoaderHelper;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.logentries.android.AndroidLogger;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -40,14 +39,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
-import android.widget.ShareActionProvider;
 
 public class WillGiveMainPageActivity  extends FragmentActivity  {
-
+	AndroidLogger logger;
+	
 	//private ActionBar actionBar;
     private FragmentTabHost mTabHost;
-    private List<Charity> charityList = new ArrayList<Charity>();
     private User user; 
+    private List<Charity> charityList = new ArrayList<Charity>();
+    private List<Charity> moreCharityList; 
+    
+    public AndroidLogger getLogger() {
+    	return this.logger;
+    }
+    
+    public List<Charity> getMoreCharityList() {
+    	return moreCharityList;
+    }
+    
+    public void setMoreCharityList(List<Charity> moreCharityList) {
+    	this.moreCharityList=moreCharityList;
+    }
     
     public void setCharityList( List<Charity> list) {
     	this.charityList = list;
@@ -58,9 +70,6 @@ public class WillGiveMainPageActivity  extends FragmentActivity  {
     public User getUser() {
     	return user;
     }
-
-    
-
     
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
@@ -76,17 +85,11 @@ public class WillGiveMainPageActivity  extends FragmentActivity  {
 	        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	        SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
 	        mSearchView.setQueryHint("keyword");
+	        
+	        //mSearchView
 	        mSearchView.setSearchableInfo(info);
 	        //mSearchView.setIconifiedByDefault(false);
-        }
-
-        // Configure the search info and add any event listeners
-        
-        //We need to enable sharing with FB and twitter, or only FB
-        //MenuItem shareItem = menu.findItem(R.id.action_share);
-        //ShareActionProvider mShareActionProvider =  (ShareActionProvider) shareItem.getActionProvider();
-        //mShareActionProvider.setShareIntent(getDefaultIntent());
-        
+        }   
         
        // When using the support library, the setOnActionExpandListener() method is
         // static and accepts the MenuItem object as an argument
@@ -114,16 +117,17 @@ public class WillGiveMainPageActivity  extends FragmentActivity  {
 		
         setContentView(R.layout.activity_bottom_tab);
         Bundle extras = getIntent().getExtras();
+        logger = AndroidLogger.getLogger(getApplicationContext(), Constants.ANDROID_LOG_UUID, false);
+
         //TODO: we also need to get marked questions' information
         if (extras != null) {
 	        //exam = (Exam) extras.getSerializable("exam");
 	        user =  (User) extras.get("user");  
-	        Log.d("UserEmail", user.getEmail());
-	        Log.d("UserId", user.getId()+"");
+	        logger.info("UserEmail - "+ user.getEmail());
+	        logger.info("UserId - " + user.getId()+"");
         }  
         
         setTitle("Hi, "+user.getFirstName());
-        
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderHelper.initImageLoader(getApplicationContext());
         //Syncing the user settings data
@@ -155,7 +159,6 @@ public class WillGiveMainPageActivity  extends FragmentActivity  {
 	    switch (item.getItemId()) {
 	        case R.id.action_search:
 	            //openSearch();
-	        	Log.w("Search", "click action search");
 	            return true;       
 	        default:
 	            return super.onOptionsItemSelected(item);

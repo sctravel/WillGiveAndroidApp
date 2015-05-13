@@ -9,15 +9,21 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
 
+import android.util.Log;
+
 public class HttpClientFactory {
 
     private static DefaultHttpClient client;
 
     public synchronized static HttpClient getThreadSafeClient() {
   
-        if (client != null)
+        if (client != null) {
+        	Log.i("HttpClientFactory", "Using existing client");
             return client;
+        }
          
+    	Log.i("HttpClientFactory", "Creating new client");
+
         client = new DefaultHttpClient();
        
         ClientConnectionManager mgr = client.getConnectionManager();

@@ -13,6 +13,7 @@ import com.apps.willgiveAndroid.user.RetrieveUserSettingsAsyncTask;
 import com.apps.willgiveAndroid.user.User;
 import com.apps.willgiveAndroid.user.UserSettings;
 import com.apps.willgiveAndroid.user.WillGiveUserUtils;
+import com.facebook.Session;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -25,10 +26,11 @@ public class UserLogoutAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		this.activity = activity;
 	}
 	
+	
 	@Override
 	protected Boolean doInBackground(Context... contexts) {
 		Context context = contexts[0];
-		boolean isLoggedOut = WillGiveLoginUtils.logout();
+		boolean isLoggedOut = WillGiveLoginUtils.logout(context);
 		if(isLoggedOut) {
 			// start the login activity, delete the user preference
 			

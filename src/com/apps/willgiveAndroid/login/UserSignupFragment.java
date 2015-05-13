@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.apps.willgiveAndroid.R;
 import com.apps.willgiveAndroid.utils.StringUtils;
+import com.facebook.widget.LoginButton;
 
 public class UserSignupFragment extends Fragment {
 
@@ -27,6 +28,7 @@ public class UserSignupFragment extends Fragment {
     private EditText lastNameView;
     private TextView messageView;
     private TextView signinView;
+    private LoginButton fbSignupBtn;
 
     private AsyncTask<Context, Integer, Boolean> signupTask;
 
@@ -41,6 +43,21 @@ public class UserSignupFragment extends Fragment {
        
     }
 
+    public void signingUpUIUpdate() {
+    	signUpBtn.setEnabled(false);
+    	fbSignupBtn.setEnabled(false);
+    	signinView.setEnabled(false);
+    	messageView.setText("Signing up ... ");
+    }
+    
+    public void signUpFailedUIUpdate() {
+    	signUpBtn.setEnabled(true);
+    	fbSignupBtn.setEnabled(true);
+    	signinView.setEnabled(true);
+    	messageView.setText("Sign up failed. Please try it again");
+    	messageView.setTextColor(Color.RED);
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,6 +69,8 @@ public class UserSignupFragment extends Fragment {
         lastNameView = (EditText) view.findViewById(R.id.reg_lastname);
         firstNameView = (EditText) view.findViewById(R.id.reg_firstname);
         signUpBtn = (Button) view.findViewById(R.id.btnRegister);
+        fbSignupBtn = (LoginButton) view.findViewById(R.id.fb_signup_button);
+
         
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -76,6 +95,8 @@ public class UserSignupFragment extends Fragment {
             		messageView.setTextColor(Color.RED);
             		return;
             	}
+            	
+            	signingUpUIUpdate();
             	signupTask = new UserSignupAsyncTask( UserSignupFragment.this, email, password, firstName, lastName);
             	signupTask.execute(getActivity().getApplicationContext());
             }

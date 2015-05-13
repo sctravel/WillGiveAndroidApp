@@ -50,7 +50,7 @@
     </plugins>
   </build>
 
-  <name>Android Barcode Scanner app</name>
-  <description>Provides the Android app "Barcode Scanner"</description>
+  <name>WillGive Android app</name>
+  <description>Provides the Android app "WillGive"</description>
 
 </project>

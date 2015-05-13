@@ -2,6 +2,7 @@ package com.apps.willgiveAndroid.charity;
 
 public class CharityQRCode {
 	private String prefix;
+	private String recipientId;
 	private String EIN;
 	private String name;
 	private String address;
@@ -10,9 +11,10 @@ public class CharityQRCode {
 	private String expireDate;
 	
 	
-	public CharityQRCode(String prefix, String eIN, String name,
+	public CharityQRCode(String prefix, String recipientId, String eIN, String name,
 			String address, String phone, String mission, String expireDate) {
 		super();
+		this.recipientId = recipientId;
 		this.prefix = prefix;
 		this.EIN = eIN;
 		this.name = name;
@@ -27,7 +29,7 @@ public class CharityQRCode {
 	@Override
 	public String toString() {
 		return "CharityQRCodeContent [prefix=" + prefix + ", EIN=" + EIN
-				+ ", name=" + name + ", phone=" + phone + ", address="
+				+ ", recipientId=" + recipientId + ", name=" + name + ", phone=" + phone + ", address="
 				+ address + ", mission=" + mission + ", expireDate="
 				+ expireDate + "]";
 	}
@@ -36,7 +38,7 @@ public class CharityQRCode {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((EIN == null) ? 0 : EIN.hashCode());
+		result = prime * result + ((recipientId == null) ? 0 : recipientId.hashCode());
 		result = prime * result
 				+ ((expireDate == null) ? 0 : expireDate.hashCode());
 		return result;
@@ -53,10 +55,10 @@ public class CharityQRCode {
 		if (getClass() != obj.getClass())
 			return false;
 		CharityQRCode other = (CharityQRCode) obj;
-		if (EIN == null) {
-			if (other.EIN != null)
+		if (recipientId == null) {
+			if (other.recipientId != null)
 				return false;
-		} else if (!EIN.equals(other.EIN))
+		} else if (!recipientId.equals(other.recipientId))
 			return false;
 		if (expireDate == null) {
 			if (other.expireDate != null)
@@ -67,6 +69,14 @@ public class CharityQRCode {
 	}
 
 
+
+	public String getRecipientId() {
+		return recipientId;
+	}
+
+	public void setRecipientId(String recipientId) {
+		this.recipientId = recipientId;
+	}
 
 	public String getPrefix() {
 		return prefix;

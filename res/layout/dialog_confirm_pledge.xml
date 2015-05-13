@@ -29,6 +29,12 @@
         android:inputType="numberDecimal"
         android:hint=" Amount "
         android:layout_below="@+id/confirmPledgeReminderTextView"/>
+    <EditText
+        android:id="@+id/pledgeNotesText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint=" Notes "
+        android:layout_below="@+id/pledgeAmountText"/>
  
      <Button
         android:id="@+id/confirmPledgeButton"
@@ -40,7 +46,7 @@
         android:text=" Confirm "
         android:layout_marginTop="25dp"
         android:layout_marginBottom="15dp"
-        android:layout_below="@+id/pledgeAmountText"
+        android:layout_below="@+id/pledgeNotesText"
         />
  
 </RelativeLayout>

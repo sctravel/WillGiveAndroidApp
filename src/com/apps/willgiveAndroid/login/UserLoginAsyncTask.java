@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.apps.willgiveAndroid.WillGiveMainPageActivity;
@@ -22,9 +23,9 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	private User user;
 	private String username;
 	private String password;
-	private UserLoginFragment fragment;
+	private Fragment fragment;
 	
-	public UserLoginAsyncTask(UserLoginFragment fragment, String username, String password){		
+	public UserLoginAsyncTask(Fragment fragment, String username, String password){		
 		this.fragment = fragment;
 		this.username = username;
 		this.password = password;
@@ -41,9 +42,9 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		    fragment.getActivity().startActivity(intent);
 		    fragment.getActivity().finish();
 		} else {
-			fragment.loginFailedUIUpdate();
-			//fragment.getLoginButton().setEnabled(true);
-			//fragment.getFBLoginButton().setEnabled(true);
+			if(fragment instanceof UserLoginFragment ) {
+				((UserLoginFragment) fragment).loginFailedUIUpdate();
+			}
 		}
 		
 	}
@@ -53,21 +54,13 @@ public class UserLoginAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
 		//
-		//Disable login button and display logging in ... message
-		
-
-		
-		user = WillGiveLoginUtils.postToLogin(username, password);
+		//Disable login button and display logging in ... message	
+		user = WillGiveLoginUtils.postToLogin(username, password, context);
 		if(user != null)  {
+			//Store user object to shared preferences
+			WillGiveUserUtils.saveUserObjectToPreferences(user, context);
 			//Syncing the settings once user logged in 
-			SharedPreferences userCredentialPref = fragment.getActivity().getSharedPreferences(Constants.USER_CREDENTIALS_PREF_NAME, 0);
-			SharedPreferences.Editor editor = userCredentialPref.edit();
-		    editor.putString("email", username);
-		    editor.putString("password", password);
-		    editor.putString("provider", Constants.WILLGIVE_LOGIN_PROVIDER_WILLGIVE);
-		    
-		    // Commit the edits!
-		    editor.commit();		
+			WillGiveUserUtils.saveUserCredentialPreferences(username, password, Constants.WILLGIVE_LOGIN_PROVIDER_WILLGIVE, context);		
 			return true;
 		}
 		

@@ -99,7 +99,7 @@
 		        android:text = "Or Sign up with Facebook"
 		     />
 	      <com.facebook.widget.LoginButton
-		        android:id="@+id/fb_login_button"
+		        android:id="@+id/fb_signup_button"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:text="Sign up with Facebook"

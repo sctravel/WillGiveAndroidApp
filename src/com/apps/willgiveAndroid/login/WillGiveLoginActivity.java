@@ -58,10 +58,11 @@ public class WillGiveLoginActivity extends FragmentActivity {
 	    	   Log.d("Login", "isLoggedOut is true");
 	    	   SharedPreferences userCredentialPref = getSharedPreferences(Constants.USER_CREDENTIALS_PREF_NAME, 0);
 	   		   SharedPreferences.Editor editor = userCredentialPref.edit();
-
 	   		   editor.clear();
 	   		   editor.commit();
-
+	   		   //FB logout
+	   		   callFacebookLogout(getApplicationContext());
+	   		   
 	       }
       }  
 	  
@@ -71,5 +72,28 @@ public class WillGiveLoginActivity extends FragmentActivity {
 	  FragmentTransaction transaction = fm.beginTransaction();
 	  transaction.replace(R.id.contentFragment, fragment);
 	  transaction.commit();
+	}
+	
+	/**
+	 * Logout From Facebook 
+	 */
+	public static void callFacebookLogout(Context context) {
+	    Session session = Session.getActiveSession();
+	    if (session != null) {
+
+	        if (!session.isClosed()) {
+	            session.closeAndClearTokenInformation();
+	            //clear your preferences if saved
+	        }
+	    } else {
+
+	        session = new Session(context);
+	        Session.setActiveSession(session);
+
+	        session.closeAndClearTokenInformation();
+	            //clear your preferences if saved
+
+	    }
+
 	}
 }

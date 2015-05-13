@@ -1,12 +1,16 @@
 package com.apps.willgiveAndroid;
 
+import com.apps.willgiveAndroid.charity.CharityDetailPageActivity;
 import com.apps.willgiveAndroid.common.ServerUrls;
 import com.apps.willgiveAndroid.login.UserLogoutAsyncTask;
 import com.apps.willgiveAndroid.user.RetrieveUserFavorateCharitiesAsyncTask;
 import com.apps.willgiveAndroid.user.User;
+import com.apps.willgiveAndroid.user.ViewUserSettingsActivity;
+import com.apps.willgiveAndroid.user.ViewUserTransactionHistoryActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,6 +36,26 @@ public class UserProfileFragment extends Fragment {
         nameView.setText( "  "+user.getFirstName()+" "+user.getLastName() + "\n  Email: "+user.getEmail()); 
         
         ImageLoader.getInstance().displayImage(ServerUrls.HOST_URL+user.getImageIconUrl(), userIconView);
+        
+        TextView userSettingsView = (TextView) view.findViewById(R.id.userSettingsName);
+        userSettingsView.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), ViewUserSettingsActivity.class); 
+   			  	intent.putExtra("user", ( (WillGiveMainPageActivity) getActivity()).getUser() );
+   			  	getActivity().startActivity(intent);
+			}
+        });
+        
+        TextView userTransactionsView = (TextView) view.findViewById(R.id.userTransactionsName);
+        userTransactionsView.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), ViewUserTransactionHistoryActivity.class); 
+   			  	intent.putExtra("user", ( (WillGiveMainPageActivity) getActivity()).getUser() );
+   			  	getActivity().startActivity(intent);
+			}
+        });
         
         Button logoutBtn = (Button) view.findViewById(R.id.logoutButton);
         logoutBtn.setOnClickListener(new View.OnClickListener(){

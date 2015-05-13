@@ -9,75 +9,185 @@ android:layout_height="fill_parent" >
 	  android:fillViewport="true">
 			<LinearLayout 
 			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
+			    android:layout_height="wrap_content"
 			    android:orientation="vertical" >
 			    
-			    <ImageView
-			        android:id="@+id/charityProfilePicture"
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:contentDescription="TODO"
-			         />
-			    
-				 <TextView
-				    android:id="@+id/charityName"     
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:gravity="center"
-			        android:layout_marginTop="10dip"
-			        android:layout_gravity="center"
-			        android:textSize="20dp" 
-			        android:textColor="@color/green_button"/>
-				 
-				 <TextView
-				    android:id="@+id/charityMission"     
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			 		android:gravity="center"
-			        android:layout_gravity="center"
-			         />
-				 
-				 <LinearLayout 
-				     android:layout_width="match_parent"
-			    	 android:layout_height="match_parent"
-			    	 android:orientation="horizontal"
-			    	 android:layout_marginTop="10dip"
-					 android:layout_marginBottom="10dip">
-				     
+			    <LinearLayout 
+			         android:layout_width="match_parent"
+			   		 android:layout_height="wrap_content"
+			   		 android:orientation="vertical">
+			   
 					 <TextView
-					    android:id="@+id/charityPhone"     
+					    android:id="@+id/charityName"     
 				        android:layout_width="wrap_content"
 				        android:layout_height="wrap_content"
-				 		android:gravity="center"
+				        android:gravity="center"
+				        android:layout_marginTop="10dip"
 				        android:layout_gravity="center"
-				        android:text="" />
-					  <TextView
-					    android:id="@+id/charityAddress"     
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				 		android:gravity="center"
-				        android:layout_gravity="center"
-				        android:text="" />
-					   <TextView
-					    android:id="@+id/charityEIN"     
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				 		android:gravity="center"
-				        android:layout_gravity="center"
-				        android:text="" />
+				        android:textSize="20dp" 
+				        android:textColor="@color/green_button"/>
 					 
-			     </LinearLayout>
+					  <ImageView
+				        android:id="@+id/charityProfilePicture"
+				        android:layout_width="fill_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_marginTop="10dip"
+				        android:layout_marginBottom="10dip"
+				        android:contentDescription="TODO"
+				         />
+					 
+					   <TextView
+						    android:id="@+id/charityEIN"     
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					 		android:gravity="center"
+					        android:layout_gravity="center"
+					        android:text="" />
+					   <TextView
+						    android:id="@+id/charityContributionSummary"     
+					        android:layout_width="fill_parent"
+					        android:layout_height="wrap_content"
+					        android:layout_marginTop="10dip"
+				        	android:layout_marginBottom="10dip"
+					 		android:gravity="center"
+					        android:layout_gravity="center"
+					        android:text="" />
+				</LinearLayout>   
+				<RelativeLayout 
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:background="@color/green_button"
+					    android:padding="5dip"
+					    android:layout_marginTop="5dip" >
+					
+					    <ImageView
+					        android:id="@+id/charityDetailFavIcon"
+					        android:layout_width="30dp"
+					        android:layout_height="30dp"
+					        android:layout_alignParentLeft="true"
+					        android:layout_alignParentTop="true"
+					        android:layout_marginRight="3dip"
+					        android:src="@drawable/fav"
+					         />
+					
+					    <TextView
+					        android:id="@+id/charityDetailFav"
+					        android:layout_width="match_parent"
+					        android:layout_height="wrap_content"
+					        android:layout_toRightOf="@id/charityDetailFavIcon"
+					        android:gravity="center_vertical"
+					        android:ellipsize="marquee"
+					        android:text="Add to Favorate"
+					        android:textSize="15sp" 
+					        android:textColor="#000" />					    					
+				 </RelativeLayout> 
+				 <RelativeLayout 
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:background="@color/green_button"
+					    android:padding="5dip"
+					    android:layout_marginTop="5dip" >
+					
+					    <ImageView
+					        android:id="@+id/charityDetailMapIcon"
+					        android:layout_width="30dp"
+					        android:layout_height="30dp"
+					        android:layout_alignParentLeft="true"
+					        android:layout_alignParentTop="true"
+					        android:layout_marginRight="3dip"
+					        android:src="@drawable/ic_action_locate"
+					         />
+					
+					    <TextView
+					        android:id="@+id/charityDetailAddress"
+					        android:layout_width="match_parent"
+					        android:layout_height="wrap_content"
+					        android:layout_toRightOf="@id/charityDetailMapIcon"
+					        android:gravity="center_vertical"
+					        android:ellipsize="marquee"
+					        android:text="Description"
+					        android:textSize="15sp" 
+					        android:textColor="#000" />					    					
+				 </RelativeLayout> 
+				 <RelativeLayout 
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:background="@color/green_button"
+					    android:padding="5dip"
+					    android:layout_marginTop="5dip" >
+					
+					    <ImageView
+					        android:id="@+id/charityDetailPhoneCallIcon"
+					        android:src="@drawable/ic_action_call"
+					        android:layout_width="30dp"
+					        android:layout_height="30dp"
+					        android:layout_alignParentLeft="true"
+					        android:layout_alignParentTop="true"
+					        android:layout_marginRight="3dip"
+					         />
+					
+					    <TextView
+					        android:id="@+id/charityDetailPhone"
+					        android:layout_width="match_parent"
+					        android:layout_height="wrap_content"
+					        android:layout_toRightOf="@id/charityDetailPhoneCallIcon"
+					        android:gravity="center_vertical"
+					        android:ellipsize="marquee"
+					        android:text="Description"
+					        android:textSize="15sp" 
+					        android:textColor="#000" />					    					
+				 </RelativeLayout> 
+				 <RelativeLayout 
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:background="@color/green_button"
+					    android:padding="5dip"
+					    android:layout_marginTop="5dip" >
+					
+					    <ImageView
+					        android:id="@+id/charityDetailWebsiteIcon"
+					        android:src="@drawable/web"
+					        android:layout_width="30dp"
+					        android:layout_height="30dp"
+					        android:layout_alignParentLeft="true"
+					        android:layout_alignParentTop="true"
+					        android:layout_marginRight="3dip"
+					         />
+					
+					    <TextView
+					        android:id="@+id/charityDetailWebsite"
+					        android:layout_width="match_parent"
+					        android:layout_height="wrap_content"
+					        android:layout_toRightOf="@id/charityDetailWebsiteIcon"
+					        android:gravity="center_vertical"
+					        android:ellipsize="marquee"
+					        android:text="Description"
+					        android:textSize="15sp" 
+					        android:textColor="#000" />					    					
+				 </RelativeLayout> 
 				 
-				 
-				 
-				
-				 
+				 <RelativeLayout 
+					    android:layout_width="fill_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginTop="10dip"
+					    android:layout_marginBottom="65dp"
+					    >
+					 <TextView
+					    android:id="@+id/charityMission"     
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				 		android:gravity="center"
+				        android:layout_gravity="center"
+				         />
+				 </RelativeLayout>
+						 			     				 
+			    			 
 			</LinearLayout>
 	</ScrollView>
  		<Button 
 			     android:id="@+id/userPledgeButton" 
 			     android:layout_width="fill_parent"
-		         android:layout_height="wrap_content"
+		         android:layout_height="50dp"
 		         android:gravity="center"
 		         android:background="@color/green_button"
 		         android:layout_gravity="center"

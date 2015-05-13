@@ -62,6 +62,7 @@ public class UserLoginFragment extends Fragment {
     public void loginUIUpdate() {
     	loginButton.setEnabled(false);
     	fbLoginBtn.setEnabled(false);
+    	registerView.setEnabled(false);
     	messageView.setText("Logging in ...");
     }
     
@@ -69,6 +70,7 @@ public class UserLoginFragment extends Fragment {
     	messageView.setText("Email or password is incorrect.");
     	messageView.setTextColor(Color.RED);
     	loginButton.setEnabled(true);
+    	registerView.setEnabled(true);
     	fbLoginBtn.setEnabled(true);
     }
     private UiLifecycleHelper uiHelper;
@@ -152,8 +154,7 @@ public class UserLoginFragment extends Fragment {
             	messageView.setText("");
             	String username = usernameView.getText().toString();
             	String password = passwordView.getText().toString();
-            	
-            	
+            	            	
             	if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty() ) {
 
             	    //Prompt for username and password
@@ -171,13 +172,31 @@ public class UserLoginFragment extends Fragment {
         });	
         
         fbLoginBtn.setReadPermissions(Arrays.asList("email", "public_profile"));
+        fbLoginBtn.setFragment(this);
         //Need to change to on click
+        fbLoginBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+            	Log.w("FBLogin", "Logging in with FB on click");
+
+				// TODO Auto-generated method stub
+				onClickLogin();
+				
+			}
+		});
         fbLoginBtn.setUserInfoChangedCallback(new UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
+            	
+            	Log.w("FBLogin", "Logging in with FB; user-"+ (user==null? "null" : "birthday") );
                 if (user != null) {
                 	//Getting the token, then post to server to login
+                	Log.w("FBLogin", "Logging in with FB Async Task");
+
+                	loginUIUpdate();
                     Session session = Session.getActiveSession();
+                    Log.i("SessionToken", session.getAccessToken());
                     (new FacebookLoginAsyncTask( UserLoginFragment.this, session.getAccessToken(), null) ).execute(getActivity().getApplicationContext());
                 	//messageView.setText("You are currently logged in as " + user.getName());
                 } else {
@@ -194,7 +213,7 @@ public class UserLoginFragment extends Fragment {
         Session session = Session.getActiveSession();
         if (!session.isOpened() && !session.isClosed()) {
             session.openForRead(new Session.OpenRequest(this)
-                .setPermissions(Arrays.asList("public_profile"))
+                .setPermissions(Arrays.asList("public_profile","email"))
                 .setCallback(statusCallback));
         } else {
             Session.openActiveSession(getActivity(), true, statusCallback);

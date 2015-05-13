@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -19,33 +20,42 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.apps.willgiveAndroid.common.Constants;
 import com.apps.willgiveAndroid.common.ServerUrls;
 import com.apps.willgiveAndroid.user.User;
 import com.apps.willgiveAndroid.utils.HttpClientFactory;
+import com.logentries.android.AndroidLogger;
 
 public class WillGiveLoginUtils {
 
-	public static boolean logout() {
+	public static boolean logout(Context context) {
+		AndroidLogger logger = AndroidLogger.getLogger(context, Constants.ANDROID_LOG_UUID, false);
+
 		try {
 		    // Add your data
 		    HttpGet httpget = new HttpGet(ServerUrls.HOST_URL+ServerUrls.LOG_OUT_PATH);
 		    HttpResponse responseMeta = HttpClientFactory.getThreadSafeClient().execute(httpget);
-		    Log.d("Logout", "Success");
+		    logger.info("User logout Successfully");
 		    return true;	    
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}		    
 		return false;
 	}
 	
-	public static User FacebookLogin(String accessToken, String refreshToken) {
+	public static User facebookLogin(String accessToken, String refreshToken, Context context) {
+		AndroidLogger logger = AndroidLogger.getLogger(context, Constants.ANDROID_LOG_UUID, false);
+
 		User user = null;
 		try {
 		    // Add your data
@@ -97,16 +107,21 @@ public class WillGiveLoginUtils {
 		    
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return user;		
 	}
 	
-	public static User postToSignup(String email, String password, String firstName, String lastName)  {
+	public static User postToSignup(String email, String password, String firstName, String lastName, Context context)  {
+		AndroidLogger logger = AndroidLogger.getLogger(context, Constants.ANDROID_LOG_UUID, false);
+
 		User user = null;
 		try {
 		    // Add your data
@@ -122,7 +137,10 @@ public class WillGiveLoginUtils {
 
 		    // Execute HTTP Post Request
 		    HttpResponse httpResponse = HttpClientFactory.getThreadSafeClient().execute(httppost);
-		    Log.v("Response", httpResponse.toString());
+		    for( Header httpMessage : httpResponse.getAllHeaders() ) {
+			    Log.v("httpMessage", httpMessage.getName()+": "+httpMessage.getValue());
+
+		    }
 		    InputStream inputStream = httpResponse.getEntity().getContent();
 
 		    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -159,16 +177,21 @@ public class WillGiveLoginUtils {
 		    
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return user;
 	}
 	
-	public static User postToLogin(String username, String password)  {
+	public static User postToLogin(String username, String password, Context context)  {
+		AndroidLogger logger = AndroidLogger.getLogger(context, Constants.ANDROID_LOG_UUID, false);
+
 		User user = null;
 		try {
 		    // Add your data
@@ -181,7 +204,10 @@ public class WillGiveLoginUtils {
 
 		    // Execute HTTP Post Request
 		    HttpResponse httpResponse = HttpClientFactory.getThreadSafeClient().execute(httppost);
-		    Log.v("Response", httpResponse.toString());
+		    for( Header httpMessage : httpResponse.getAllHeaders() ) {
+			    Log.v("httpMessage", httpMessage.getName()+": "+httpMessage.getValue());
+
+		    }
 		    InputStream inputStream = httpResponse.getEntity().getContent();
 
 		    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -218,10 +244,13 @@ public class WillGiveLoginUtils {
 		    
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return user;

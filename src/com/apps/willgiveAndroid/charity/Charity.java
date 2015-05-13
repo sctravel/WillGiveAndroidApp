@@ -30,13 +30,14 @@ public class Charity implements Serializable{
 	private String status;
 	private String contactPersonName;
 	private String contactPersonTitle;
+	private Boolean isFavored;
 	
 	public Charity(Long id, String email, String name, String eIN,
 			String category, String address, String city, String state,
 			String country, String zipcode, String phone, String fax,
 			String mission, String imageUrl, String videoUrl, String website,
 			String facebookUrl, String imagePath, Double rating, String status,
-			String contactPersonName, String contactPersonTitle) {
+			String contactPersonName, String contactPersonTitle, Boolean isFavored) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -60,6 +61,7 @@ public class Charity implements Serializable{
 		this.status = status;
 		this.contactPersonName = contactPersonName;
 		this.contactPersonTitle = contactPersonTitle;
+		this.isFavored = isFavored;
 	}
 	//Id is the only identifier to determine whether two charities are the same
 	@Override
@@ -218,6 +220,11 @@ public class Charity implements Serializable{
 	public void setContactPersonTitle(String contactPersonTitle) {
 		this.contactPersonTitle = contactPersonTitle;
 	}
-	
+	public Boolean getIsFavored(){
+		return isFavored;
+	}
+	public void setIsFavored(Boolean isFavored){
+		this.isFavored = isFavored;
+	}
 
 }

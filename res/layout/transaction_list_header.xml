@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="#ffffff"
+    android:padding="5dip"
+    android:layout_marginTop="40dip" >
+
+    <!--  <TextView
+        android:id="@+id/confirmNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:ellipsize="marquee"
+        android:text="Confirmation #"
+        android:textSize="16sp" 
+        android:textColor="#000" />
+        -->
+    <TextView
+        android:id="@+id/transactionDateTextView"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:ellipsize="marquee"
+        android:text="Date"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="5dip"
+        android:textSize="16sp" 
+        android:textColor="#000" />
+     <TextView
+        android:id="@+id/transactionAmountTextView"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/transactionDateTextView"
+        android:gravity="center_vertical"
+        android:layout_marginRight="5dip"
+        android:ellipsize="marquee"
+        android:text="Amount"
+        android:textSize="16sp" 
+        android:textColor="#000" />
+      <TextView
+        android:id="@+id/transactionStatusTextView"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/transactionAmountTextView"
+        android:gravity="center_vertical"
+        android:ellipsize="marquee"
+        android:layout_marginRight="5dip"        
+        android:text="Status"
+        android:textSize="16sp" 
+        android:textColor="#000" />
+     <TextView
+        android:id="@+id/recipientNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/transactionStatusTextView"
+        android:gravity="center_vertical"
+        android:layout_marginRight="10dip"
+        android:ellipsize="marquee"
+        android:text="Contribute To"
+        android:textSize="16sp" 
+        android:textColor="#000" />
+</RelativeLayout> 

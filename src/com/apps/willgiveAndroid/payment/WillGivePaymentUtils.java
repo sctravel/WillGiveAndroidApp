@@ -15,14 +15,18 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.apps.willgiveAndroid.common.Constants;
 import com.apps.willgiveAndroid.common.ServerUrls;
 import com.apps.willgiveAndroid.utils.HttpClientFactory;
+import com.logentries.android.AndroidLogger;
 
 public class WillGivePaymentUtils {
-	public static boolean sendPledge(Long userId, Double amount, Long recipientId) {
+	public static boolean sendPledge(Long userId, Double amount, Long recipientId, String notes, Context context) {
+		AndroidLogger logger = AndroidLogger.getLogger(context, Constants.ANDROID_LOG_UUID, false);
+
 		boolean isFinished = false;
 		
 		try {
@@ -31,7 +35,9 @@ public class WillGivePaymentUtils {
 		    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 		    nameValuePairs.add(new BasicNameValuePair("userId", ""+userId));
 		    nameValuePairs.add(new BasicNameValuePair("amount", ""+amount));
-		    nameValuePairs.add(new BasicNameValuePair("recipientId", ""+recipientId));	   
+		    nameValuePairs.add(new BasicNameValuePair("recipientId", ""+recipientId));	
+		    nameValuePairs.add(new BasicNameValuePair("notes", ""+notes));	   
+
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			 // Execute HTTP Post Request
 		    HttpResponse httpResponse = HttpClientFactory.getThreadSafeClient().execute(httppost);
@@ -59,10 +65,13 @@ public class WillGivePaymentUtils {
 		    
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 	   

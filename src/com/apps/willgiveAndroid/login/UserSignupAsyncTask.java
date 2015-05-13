@@ -37,15 +37,20 @@ public class UserSignupAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 					
-		if(result) {		    	
+		if(result) {
+			//Call the login task here. 
+			//TODO: Somehow directly signin in server side can not keep session, need to figure it out why
+			// Inorder to keep login history in server side, we'd better to do this
+			AsyncTask<Context, Integer, Boolean> loginTask = new UserLoginAsyncTask( fragment, email, password);
+    		loginTask.execute(fragment.getActivity().getApplicationContext());
+			/*
 		    Intent intent = new Intent(fragment.getActivity(), com.apps.willgiveAndroid.WillGiveMainPageActivity.class);
 		    intent.putExtra("user", user);    
 		    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		    fragment.getActivity().startActivity(intent);
-		    fragment.getActivity().finish();
+		    fragment.getActivity().finish();*/
 		} else {
-			fragment.getMessageView().setText("Sign up failed. Please try it again.");
-			fragment.getMessageView().setTextColor(Color.RED);
+			fragment.signUpFailedUIUpdate();
 		}
 		
 	}
@@ -55,9 +60,19 @@ public class UserSignupAsyncTask extends AsyncTask<Context, Integer, Boolean>{
 		// TODO Auto-generated method stub
 		Context context = contexts[0];
 		//TODO:  use correct username password
-		user = WillGiveLoginUtils.postToSignup(email, password, firstName, lastName);
-		if(user != null)     
-			return true;
+		user = WillGiveLoginUtils.postToSignup(email, password, firstName, lastName, context);
+		if(user != null) {    
+				//Syncing the settings once user logged in 
+			SharedPreferences userCredentialPref = fragment.getActivity().getSharedPreferences(Constants.USER_CREDENTIALS_PREF_NAME, 0);
+			SharedPreferences.Editor editor = userCredentialPref.edit();
+		    editor.putString("email", email);
+		    editor.putString("password", password);
+		    editor.putString("provider", Constants.WILLGIVE_LOGIN_PROVIDER_WILLGIVE);
+		    
+		    // Commit the edits!
+		    editor.commit();		
+			return true;		
+		}
 		
 		return false;
 	}

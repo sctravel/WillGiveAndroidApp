@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -15,6 +16,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.apps.willgiveAndroid.charity.Charity;
@@ -24,6 +28,79 @@ import com.apps.willgiveAndroid.utils.HttpClientFactory;
 import com.apps.willgiveAndroid.utils.StringUtils;
 
 public class WillGiveUserUtils {
+	
+	public static void saveUserCredentialPreferences(String username, String password, String provider, Context context) {
+		SharedPreferences userCredentialPref = context.getSharedPreferences(Constants.USER_CREDENTIALS_PREF_NAME, 0);
+		SharedPreferences.Editor editor = userCredentialPref.edit();
+	    editor.putString("email", username);
+	    editor.putString("password", password);
+	    editor.putString("provider", provider);
+	    
+	    // Commit the edits!
+	    editor.commit();	
+	}
+	
+	public static void saveUserSettingsPreferences(UserSettings settings, Context context) {
+		SharedPreferences pref = context.getSharedPreferences(Constants.USER_SETTINGS_PREF_NAME, 0);
+		SharedPreferences.Editor editor = pref.edit();
+	    editor.putLong("userId", settings.getUserId());
+	    editor.putLong("maxAmountPerTime", settings.getMaxAmountPerTime());
+	    editor.putLong("maxAmountDaily", settings.getMaxAmountDaily());
+	    editor.putLong("defaultAmountPerTime", settings.getDefaultAmountPerTime());
+	    editor.putBoolean("allowContributionPublic", settings.getAllowContributionPublic());
+	    editor.putBoolean("receiveEmailNotification", settings.getReceiveEmailNotification());
+	    editor.putBoolean("receiveEmailUpdate", settings.getReceiveEmailUpdate());
+	    
+	    // Commit the edits!
+	    editor.commit();
+	}
+	
+	public static UserSettings getUserSettingsFromPreferences(Context context) {
+		SharedPreferences userSettingsPref = context.getSharedPreferences(Constants.USER_SETTINGS_PREF_NAME, 0);
+		
+		Long userId = userSettingsPref.getLong("userId", 0);
+		Long maxAmountPerTime = userSettingsPref.getLong("maxAmountPerTime", 0);
+		Long maxAmountDaily = userSettingsPref.getLong("maxAmountDaily", 0);
+		Long defaultAmountPerTime = userSettingsPref.getLong("defaultAmountPerTime", 0);
+
+		Boolean allowContributionPublic = userSettingsPref.getBoolean("allowContributionPublic", true);
+		Boolean receiveEmailNotification = userSettingsPref.getBoolean("receiveEmailNotification", true);
+		Boolean receiveEmailUpdate = userSettingsPref.getBoolean("receiveEmailUpdate", true);
+
+		
+		UserSettings settings = new UserSettings( userId, maxAmountDaily,
+				maxAmountPerTime, defaultAmountPerTime,
+			    receiveEmailUpdate, receiveEmailNotification,
+				allowContributionPublic);
+		return settings;
+	}
+	
+	public static User getUserObjectFromPreferences(Context context) {
+		
+		SharedPreferences userPref = context.getSharedPreferences(Constants.USER_PREF_NAME, 0);
+		Long userId = userPref.getLong("userId", 0);
+		String firstName = userPref.getString("firstName", "");
+		String lastName = userPref.getString("lastName", "");
+		String provider = userPref.getString("provider", "");
+		String email = userPref.getString("email", "");
+		String imageIconUrl = userPref.getString("imageIconUrl", "");
+		
+		User user = new User(userId, email, firstName, lastName, imageIconUrl, provider);
+		
+		return user;
+		
+	}
+	public static void saveUserObjectToPreferences(User user, Context context) {
+		SharedPreferences userPref = context.getSharedPreferences(Constants.USER_PREF_NAME, 0);
+		Editor userPrefEditor = userPref.edit();
+		userPrefEditor.putLong("userId", user.getId());
+		userPrefEditor.putString("email", user.getEmail());
+		userPrefEditor.putString("firstName", user.getFirstName());
+		userPrefEditor.putString("lastName", user.getLastName());
+		userPrefEditor.putString("provider", user.getProvider());
+		userPrefEditor.putString("imageIconUrl", user.getImageIconUrl());
+		userPrefEditor.commit();
+	}
 	
 	public static List<UserTransaction> getUserTransactionHistory(Long userId) {
 		List<UserTransaction> transactionHistory = new ArrayList<UserTransaction>();
@@ -49,14 +126,18 @@ public class WillGiveUserUtils {
 		    	JSONObject transactionJson = (JSONObject)iterator.next();
 		    	
 		    	String transactionId = (String) transactionJson.get("transactionId");
-		    	Double amount = (Double) transactionJson.get("amount");
+		    	String amount = (String) transactionJson.get("amount").toString();
+		    	Log.d("amount", amount.toString());
+
 		    	Long recipientId = (Long) transactionJson.get("recipientId");
+		    	String recipientName = (String) transactionJson.get("name");
+		    	String confirmationCode = (String) transactionJson.get("confirmationCode");
 		    	String dateTime = (String) transactionJson.get("dateTime");
 		    	String settleTime = (String) transactionJson.get("settleTime");
 		    	String status = (String) transactionJson.get("status");
 		    	
-		    	UserTransaction tran = new UserTransaction(transactionId, userId, recipientId, amount, dateTime, settleTime, status);
-		    	
+		    	UserTransaction tran = new UserTransaction(transactionId, confirmationCode, userId, recipientId, recipientName, Double.parseDouble(amount.toString()), dateTime, settleTime, status);
+		    	Log.d("UserTransaction", tran.toString());
 		    	transactionHistory.add(tran);
 		    }
 		} catch (IOException e) {
@@ -74,16 +155,35 @@ public class WillGiveUserUtils {
 	public static boolean setUserFavorateCharity(String charityId, String value) {
 		//This is a get request using query parameters  maybe need to change it
 		String url = ServerUrls.HOST_URL + ServerUrls.SET_USER_FAV_CHARITY_PATH + "?rid="+charityId+"&value="+value;
-		
-		return true;
+		try {
+			HttpGet requestMeta = new HttpGet(url);
+			HttpResponse responseMeta = HttpClientFactory.getThreadSafeClient().execute(requestMeta);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(responseMeta.getEntity().getContent(), "UTF-8"));
+			String jsonStr = "";
+			String str="";
+			while((str=reader.readLine())!=null){
+				jsonStr+=str;	
+			}
+			
+			if(jsonStr.equalsIgnoreCase(Constants.SERVICE_CALL_SUCCESS)) {
+				return true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			Log.e("WillGiveUserUtil", "caught unknow exception");
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	//Need to login, userId is in the session
 	public static List<Charity> getUserFavorateCharityList() {
 		List<Charity> favCharityList = new ArrayList<Charity>();
 		String url = ServerUrls.HOST_URL + ServerUrls.GET_USER_FAV_CHARITIES_PATH;
-		HttpGet requestMeta = new HttpGet(url);
 		try {
+			HttpGet requestMeta = new HttpGet(url);
 			HttpResponse responseMeta = HttpClientFactory.getThreadSafeClient().execute(requestMeta);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(responseMeta.getEntity().getContent(), "UTF-8"));
 			String jsonStr = "";
@@ -103,10 +203,10 @@ public class WillGiveUserUtils {
 		     	
 		    	JSONObject charityJson = (JSONObject)iterator.next();
 		    	
-		        Long charityId = (Long) charityJson.get("recipient_id");
+		        Long charityId = (Long) charityJson.get("recipientId");
 		        String name = (String) charityJson.get("name");
 		        String email = (String) charityJson.get("email");
-		        String ein = (String) charityJson.get("EIN");
+		        String ein = (String) charityJson.get("ein");
 		        String category = (String) charityJson.get("category");
 		        String address = (String) charityJson.get("address");
 		        String city = (String) charityJson.get("city");
@@ -124,6 +224,7 @@ public class WillGiveUserUtils {
 		        //Double rating = (Double) charityJson.get("rating"); //need to change DB, make it number
 		        String videoUrl = (String) charityJson.get("videoUrl");
 		        String status = (String) charityJson.get("status");
+		        Boolean isFavored = StringUtils.getBooleanFromYOrN( (String) charityJson.get("isFavored") );
 
 		        
 		        Charity charity = new Charity( charityId,  email,  name,  ein,
@@ -131,7 +232,7 @@ public class WillGiveUserUtils {
 		    			country, zipcode, phone, fax,
 		    			mission, ServerUrls.CHARITY_PROFILE_PICTURE_PATH_PREFIX, videoUrl, website,
 		    			facebookUrl, imagePath, 0.0, status,
-		    			contactPersonName, contactPersonTitle);
+		    			contactPersonName, contactPersonTitle, isFavored );
 				Log.d("Charity", "Id- "+ charityId+"; name- "+name+"; EIN- "+ein+"; Address- "+address);
 				favCharityList.add(charity);
 		        //Insert Course MetaData to DB
@@ -141,6 +242,9 @@ public class WillGiveUserUtils {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			Log.e("WillGiveUserUtil", "caught unknow exception");
 			e.printStackTrace();
 		}
 		return favCharityList;
@@ -155,6 +259,10 @@ public class WillGiveUserUtils {
 		    HttpGet httpget = new HttpGet(url);
 
 		    HttpResponse responseMeta = HttpClientFactory.getThreadSafeClient().execute(httpget);
+		    for( Header httpMessage : responseMeta.getAllHeaders() ) {
+			    Log.v("httpMessage", httpMessage.getName()+": "+httpMessage.getValue());
+
+		    }
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(responseMeta.getEntity().getContent(), "UTF-8"));
 			String jsonStr = "";
 			String str="";
